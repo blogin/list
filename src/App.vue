@@ -1,25 +1,19 @@
 <template>
   <div id="app">
     <Header></Header>
-    <Options></Options>
-    <List></List>    
-    <Controls></Controls>
+    <List></List>
   </div>
 </template>
 
 <script>
 import Header from "./components/Head/header.vue"
-import Options from "./components/Head/options.vue"
-import Controls from "./components/Head/controls.vue"
 import List from "./components/list.vue"
 
 export default {
   name: "app",
   components: {
     Header,
-    Options,
-    List,
-    Controls
+    List
   },
   mounted() {    
     this.$store.dispatch("getOptions");     // загружается список опций
@@ -33,7 +27,7 @@ export default {
 <style scoped>
 #app {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 30% 1fr;
   margin: 10px;
   grid-gap: 10px;
 }

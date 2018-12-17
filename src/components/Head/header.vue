@@ -1,9 +1,9 @@
 <template>
     <div>
-        <table>
+        <table class="table table-sm table-bordered">
             <tr>
                 <td>
-                    <select @change="getCurMoney">
+                    <select @change="getCurMoney" class="form-control form-control-sm">
                         <option value="ЗП">Зарплата в {{ getMonth }}</option>
                         <option value="Аванс">Аванс в {{ getMonth }}</option>
                     </select>
@@ -32,11 +32,16 @@
             <td>{{ toNal }}</td>
           </tr>
         </table>
+        <hr>
+        <Options></Options>
+        <Controls></Controls>
     </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import Options from './options.vue';
+import Controls from "./controls.vue";
 export default {
   computed: {
     ...mapGetters(["salYear", "money", "loadingYear", "costs", "showCosts", "toSber", "toNal"]),
@@ -61,6 +66,10 @@ export default {
               }
           }
       }
+  },
+  components:{
+      Options,
+      Controls
   }
 };
 </script>

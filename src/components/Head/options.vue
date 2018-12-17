@@ -1,9 +1,14 @@
 <template>
     <div>
         <div v-if="loadingOpt">Loading...</div>
-        <table v-else>
+        <table v-else class="table table-sm table-bordered">
           <tr v-for="(el,iEl) in options" :key="iEl">
-            <td><input type="checkbox" v-model="el.checked" @change="onChecked" :value = "el.name" >{{ el.name }}</td>
+            <td><input 
+                    type="checkbox" 
+                    v-model="el.checked" 
+                    @change="onChecked" 
+                    :value = "el.name"
+                > {{ el.name }}</td>
             <td>{{ el.total }}</td>
           </tr>
         </table>

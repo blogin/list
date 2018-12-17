@@ -4,6 +4,11 @@ import Axios from 'axios'
 
 Vue.use(Vuex, Axios)
 
+// Сортировка массива
+function compareAge(personA, personB) {
+  return personB.cost - personA.cost;
+}
+
 export default new Vuex.Store({
   state: {
     money: null,
@@ -19,9 +24,13 @@ export default new Vuex.Store({
     toNal:null,
     show:false,
     nameOfList:null,
-    dbSuccess:false
+    dbSuccess:false,
+    nullOfList: false
   },
   getters: {
+    nullOfList(state){
+      return state.nullOfList;
+    },
     money(state) {
       return state.money;
     },
@@ -69,6 +78,7 @@ export default new Vuex.Store({
     showMessage(state,payload){
       state.show = payload
       state.dbSuccess = payload
+      state.nullOfList = payload
     },
     addToList(state){
       let list = state.list;
@@ -84,6 +94,7 @@ export default new Vuex.Store({
           }
         }
       } else {
+        list = [];
         list.unshift({ cost: "", name: "", sel: "", show: true });
       }
       state.list = list;
@@ -128,7 +139,8 @@ export default new Vuex.Store({
       state.toSber = costSber;
       state.options = options;
       state.costs = cost.toFixed(2);
-      state.showCosts = showCost.toFixed(2);
+      state.showCosts = showCost.toFixed(2);            
+      state.list ? state.list.sort(compareAge) : null
     },
     setOptions(state,obj){
       state.options = obj;
@@ -141,10 +153,14 @@ export default new Vuex.Store({
       this.commit("costCalculate");
     },
     setList(state, payload) {
-      state.list = payload;
-      this.commit("setOptionsToList");  
-      this.commit("costCalculate");
-      state.loadingList = false;
+      if (payload){
+        state.list = payload;
+        this.commit("setOptionsToList");  
+        this.commit("costCalculate");
+        state.loadingList = false;
+      }else{
+        state.nullOfList = true;
+      }
     },
     setMoney(state, payload) {
       let p = payload.split("~");
@@ -171,6 +187,16 @@ export default new Vuex.Store({
     },
     setListToDB(state,data){
       state.dbSuccess = true;
+    },
+    copyLastList(state){
+      let d = new Date();
+      let curMonth = d.toLocaleString("en", {month: "long"}).toLowerCase();
+      d.setMonth(d.getMonth() - 1);
+      let prevMonth = d.toLocaleString("en", {month: "long"}).toLowerCase();      
+      let curNameOfList = state.nameOfList;
+      curNameOfList == "10_"+curMonth ? curNameOfList = "10_"+prevMonth : null
+      curNameOfList == "25_"+curMonth ? curNameOfList = curNameOfList.replace("25", "10") : null
+      this.dispatch("getPrevList",curNameOfList);
     }
   },
   actions: {
@@ -188,6 +214,11 @@ export default new Vuex.Store({
       let { data } = await Axios.get('https://list-of-product.firebaseio.com/list/'+d+'.json');
       commit('setList', data);
       commit('setNameOfList', d);
+    },
+    getPrevList: async ({ commit }, name) => {
+      let { data } = await Axios.get('https://list-of-product.firebaseio.com/list/'+name+'.json');
+      commit('setList', data);
+      commit('setNameOfList', name);
     },
     putOptions: async ({ commit }, obj) => {
       let { data } = await Axios.put('https://list-of-product.firebaseio.com/db_opt.json', obj);
