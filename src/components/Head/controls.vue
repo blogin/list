@@ -59,7 +59,7 @@ export default {
 
 <style scoped>
 @media (max-width: 800px) {
-  #add, #addDb, #copy {
+  #add, #copy {
     display: none;
   }
 }

@@ -4,15 +4,14 @@
       <div v-if="loadingList">Loading...</div>
       <template v-else>
         <div v-for="(l,i) in list" :key="i" v-if="l.show" class="chList">
-          <b-form-checkbox class="ch" v-model="l.check" @click="crossOutText(i)"/>
           <input
             id="cost"
             type="number"
-            v-focus
             v-model="l.cost"
             class="form-control form-control-sm"
             v-on:keyup.enter="costCalculate"
             :style="l.check ? 'text-decoration: line-through' : null"
+            :ref="'costs'"
           >
           <input
             type="text"
@@ -30,6 +29,7 @@
             <option v-for="(el,iEl) in options" :key="iEl">{{ el.name }}</option>
           </select>
           <button @click="removeListItem(i)" class="CustomBtn">x</button>
+          <b-form-checkbox class="ch" v-model="l.check" @click="crossOutText(i)"/>
         </div>
       </template>
     </div>
@@ -77,9 +77,10 @@ export default {
   }
   .form-control {
     font-size:12px;
+    width: auto;
   }
   .chList{
-    grid-template-columns: 4% 15% repeat(2, 1fr);
+    grid-template-columns: 15% repeat(3, 1fr) 4%;
   }
 }
 .cross-out-text {
@@ -90,7 +91,7 @@ export default {
 }
 .chList {
   display: grid;
-  grid-template-columns: 4% 15% repeat(3, 1fr);
+  grid-template-columns: 15% 40% 22% 3% 1.5%;
   grid-gap: 5px;
   margin: 2px 0;
 }

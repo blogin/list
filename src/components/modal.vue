@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal id="modal-list" :title="nameOfList" hide-header hide-footer>
+    <b-modal id="modal-list" :title="nameOfList" hide-header ok-only>
       <div v-if="list"> <!-- если список существует то отрисовывать модальное окно -->
           <b-table 
               small hover bordered

@@ -92,17 +92,17 @@ export default new Vuex.Store({
       if (list) {
         let i = list.length;
         if (i == 0 || list == null) {
-          list.push({ cost: "", name: "", sel: "", show: true, check: false });
+          list.unshift({ cost: "", name: "", sel: "", show: true, check: false });
         } else {
           if (list[0].cost == "" || list[0].name == "" || list[0].sel == "") {
             state.show = !state.show; /// Показывать сообщение если не все поля заполнены
           } else {
-            list.push({ cost: "", name: "", sel: "", show: true, check: false });
+            list.unshift({ cost: "", name: "", sel: "", show: true, check: false });
           }
         }
       } else {
         list = [];
-        list.push({ cost: "", name: "", sel: "", show: true, check: false });
+        list.unshift({ cost: "", name: "", sel: "", show: true, check: false });
       }
       state.list = list;
     },
@@ -226,6 +226,7 @@ export default new Vuex.Store({
     getList: async ({ commit }, day) => {
       let d = new Date().toLocaleString("en", {month: "long"});
       d = day+"_"+d.toLowerCase();
+      console.log(d);
       let { data } = await Axios.get('https://list-of-product.firebaseio.com/list/'+d+'.json');
       commit('setList', data);
       commit('setNameOfList', d);
