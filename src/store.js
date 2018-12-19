@@ -92,17 +92,17 @@ export default new Vuex.Store({
       if (list) {
         let i = list.length;
         if (i == 0 || list == null) {
-          list.unshift({ cost: "", name: "", sel: "", show: true, check: false });
+          list.push({ cost: "", name: "", sel: "", show: true, check: false });
         } else {
           if (list[0].cost == "" || list[0].name == "" || list[0].sel == "") {
             state.show = !state.show; /// Показывать сообщение если не все поля заполнены
           } else {
-            list.unshift({ cost: "", name: "", sel: "", show: true, check: false });
+            list.push({ cost: "", name: "", sel: "", show: true, check: false });
           }
         }
       } else {
         list = [];
-        list.unshift({ cost: "", name: "", sel: "", show: true, check: false });
+        list.push({ cost: "", name: "", sel: "", show: true, check: false });
       }
       state.list = list;
     },

@@ -1,9 +1,9 @@
 <template>
     <div class="control-el">
       <div>
-        <button @click = "addToList" class="btn btn-success">Add</button>
-        <button @click = "addListToDB" class="btn btn-success">Add to DB</button>
-        <button @click = "copyLastList" class="btn btn-success">Copy</button>        
+        <button @click = "addToList" id="add" class="btn btn-success">Add</button>
+        <button @click = "addListToDB" id="addDb" class="btn btn-success">Add to DB</button>
+        <button @click = "copyLastList" id="copy" class="btn btn-success">Copy</button>        
         <b-btn v-b-modal.modal-list>List</b-btn>
         <button @click = "resetCheckboxes" class="btn btn-info" >Reset Checkbox</button>
       </div>
@@ -58,6 +58,11 @@ export default {
 </script>
 
 <style scoped>
+@media (max-width: 800px) {
+  #add, #addDb, #copy {
+    display: none;
+  }
+}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 1s;

@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <Header></Header>
-    <List></List>
-    <modal></modal>  
+    <Header id="head"></Header>
+    <List id="list"></List>
+    <modal></modal>
   </div>
 </template>
 
@@ -24,8 +24,7 @@ export default {
   },
   methods: {
     closeModal() {
-      this.$store.commit("modalVisible", false);
-      //this.isModalVisible = false;
+      this.$store.commit("modalVisible", false)
     }
   },
   mounted() {
@@ -37,9 +36,14 @@ export default {
 </script>
 
 <style scoped>
+@media (max-width: 800px) { 
+  #head, #list {
+    grid-column: span 2;
+  }
+}
 #app {
   display: grid;
-  grid-template-columns: 30% 1fr;
+  grid-template-columns: minmax(100px, 35%) 1fr;
   margin: 10px;
   grid-gap: 10px;
 }

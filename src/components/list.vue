@@ -1,39 +1,39 @@
 <template>
-    <div>
-        <div class="list">
-            <div v-if="loadingList">Loading...</div>
-            <template v-else >
-                <div v-for="(l,i) in list" :key="i" v-if="l.show" class="chList">                       
-                    <b-form-checkbox class="ch" v-model="l.check" @click="crossOutText(i)"/>
-                    <input id="cost" 
-                        type="number" 
-                        v-focus
-                        v-model="l.cost"
-                        class="form-control form-control-sm"
-                        v-on:keyup.enter="costCalculate"
-                        :style="l.check ? 'text-decoration: line-through' : null"
-                    >
-                    <input type="text" 
-                        v-model="l.name" 
-                        key="1" 
-                        class="form-control form-control-sm"
-                        :style="l.check ? 'text-decoration: line-through' : null"
-                    >
-                    <select 
-                        v-model="l.sel" 
-                        @change="costCalculate" 
-                        class="form-control form-control-sm"
-                        :style="l.check ? 'text-decoration: line-through' : null"
-                    >
-                      <option v-for="(el,iEl) in options" :key="iEl">
-                          {{ el.name }}
-                      </option>
-                    </select>
-                    <button @click="removeListItem(i)" class="CustomBtn">x</button>
-                </div>
-            </template>
-        </div>       
+  <div>
+    <div class="list">
+      <div v-if="loadingList">Loading...</div>
+      <template v-else>
+        <div v-for="(l,i) in list" :key="i" v-if="l.show" class="chList">
+          <b-form-checkbox class="ch" v-model="l.check" @click="crossOutText(i)"/>
+          <input
+            id="cost"
+            type="number"
+            v-focus
+            v-model="l.cost"
+            class="form-control form-control-sm"
+            v-on:keyup.enter="costCalculate"
+            :style="l.check ? 'text-decoration: line-through' : null"
+          >
+          <input
+            type="text"
+            v-model="l.name"
+            key="1"
+            class="form-control form-control-sm"
+            :style="l.check ? 'text-decoration: line-through' : null"
+          >
+          <select
+            v-model="l.sel"
+            @change="costCalculate"
+            class="form-control form-control-sm"
+            :style="l.check ? 'text-decoration: line-through' : null"
+          >
+            <option v-for="(el,iEl) in options" :key="iEl">{{ el.name }}</option>
+          </select>
+          <button @click="removeListItem(i)" class="CustomBtn">x</button>
+        </div>
+      </template>
     </div>
+  </div>
 </template>
 
 <script>
@@ -46,14 +46,13 @@ import { mapGetters } from "vuex";
 import { mapMutations } from "vuex";
 export default {
   directives: { focus },
-  data(){
+  data() {
     return {
-      formClass:["form-control", "form-control-sm"]
-    }
+      formClass: ["form-control", "form-control-sm"]
+    };
   },
   computed: {
     ...mapGetters(["loadingList", "list", "options"])
-
   },
   methods: {
     ...mapMutations(["costCalculate"]),
@@ -61,7 +60,7 @@ export default {
       this.$delete(this.list, index);
       this.$store.commit("costCalculate");
     },
-    crossOutText(i){
+    crossOutText(i) {
       console.log(i);
       this.$set(this.list, i, true);
       //this.formClass.push("cross-out-text").join(" ");
@@ -72,27 +71,38 @@ export default {
 </script>
 
 <style scoped>
-.cross-out-text{
+@media (max-width: 800px) {
+  .CustomBtn {
+    display: none;
+  }
+  .form-control {
+    font-size:12px;
+  }
+  .chList{
+    grid-template-columns: 4% 15% repeat(2, 1fr);
+  }
+}
+.cross-out-text {
   text-decoration: line-through;
 }
-.ch{
+.ch {
   padding-top: 5px;
 }
-.chList{
+.chList {
   display: grid;
-  grid-template-columns: 1.5% 5% 20% 7% 4%;
-  grid-gap:5px;
-  margin:2px 0;
+  grid-template-columns: 4% 15% repeat(3, 1fr);
+  grid-gap: 5px;
+  margin: 2px 0;
 }
-.form-control{
-  border-left:none;
-  border-top:none;
-  border-right:none;
+.form-control {
+  border-left: none;
+  border-top: none;
+  border-right: none;
 }
-.form-control:focus{
-    border-color: #cccccc;
-    -webkit-box-shadow: none;
-    box-shadow: none;
+.form-control:focus {
+  border-color: #cccccc;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 .list {
   height: 97vh;
@@ -126,11 +136,10 @@ export default {
   height: 30px;
   text-justify: auto;
   border-radius: 5px;
-  border:none;
+  border: none;
   background-color: rgb(238, 94, 94);
-  color:rgb(247, 238, 238);
+  color: rgb(247, 238, 238);
 }
-
 </style>
 
 
