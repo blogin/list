@@ -3,9 +3,9 @@
       <div>
         <button @click = "addToList" class="btn btn-success">Add</button>
         <button @click = "addListToDB" class="btn btn-success">Add to DB</button>
-        <button @click = "copyLastList" class="btn btn-success">Copy</button>
-        <button class="btn btn-info disabled">Download</button>
-        <button class="btn btn-info disabled">Show Checkboxes</button>
+        <button @click = "copyLastList" class="btn btn-success">Copy</button>        
+        <b-btn v-b-modal.modal-list>List</b-btn>
+        <button @click = "resetCheckboxes" class="btn btn-info" >Reset Checkbox</button>
       </div>
       <div>
         <transition name="fade" v-on:enter="showAlert">
@@ -28,12 +28,21 @@
 <script>
 import { mapMutations } from "vuex";
 import { mapGetters } from "vuex";
+
 export default {
   computed: {
-    ...mapGetters(["show", "nameOfList", "list", "dbSuccess", "options", "nullOfList"])
+    ...mapGetters([
+      "show",
+      "nameOfList",
+      "list",
+      "dbSuccess",
+      "options",
+      "nullOfList",
+      "isModalVisible"
+    ])
   },
   methods: {
-    ...mapMutations(["addToList", "showMessage", "copyLastList"]),
+    ...mapMutations(["addToList", "showMessage", "copyLastList", "resetCheckboxes"]),
     showAlert() {
       setTimeout(() => {
         this.$store.commit("showMessage", false);
@@ -57,10 +66,10 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
-button{
+button {
   margin: 0 5px;
 }
-.alert{
+.alert {
   margin: 10px 0;
 }
 </style>

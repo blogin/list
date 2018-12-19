@@ -3,21 +3,33 @@
         <div class="list">
             <div v-if="loadingList">Loading...</div>
             <template v-else >
-                <div v-for="(l,i) in list" :key="i" v-if="l.show" class="chList">
+                <div v-for="(l,i) in list" :key="i" v-if="l.show" class="chList">                       
+                    <b-form-checkbox class="ch" v-model="l.check" @click="crossOutText(i)"/>
                     <input id="cost" 
                         type="number" 
                         v-focus
                         v-model="l.cost"
                         class="form-control form-control-sm"
                         v-on:keyup.enter="costCalculate"
+                        :style="l.check ? 'text-decoration: line-through' : null"
                     >
-                    <input type="text" v-model="l.name" key="1" class="form-control form-control-sm">
-                    <select v-model="l.sel" @change="costCalculate" class="form-control form-control-sm">
-                    <option v-for="(el,iEl) in options" :key="iEl">
-                        {{ el.name }}
-                    </option>
+                    <input type="text" 
+                        v-model="l.name" 
+                        key="1" 
+                        class="form-control form-control-sm"
+                        :style="l.check ? 'text-decoration: line-through' : null"
+                    >
+                    <select 
+                        v-model="l.sel" 
+                        @change="costCalculate" 
+                        class="form-control form-control-sm"
+                        :style="l.check ? 'text-decoration: line-through' : null"
+                    >
+                      <option v-for="(el,iEl) in options" :key="iEl">
+                          {{ el.name }}
+                      </option>
                     </select>
-                    <button @click="removeListItem(i)" class="CustomBtn">x</button>            
+                    <button @click="removeListItem(i)" class="CustomBtn">x</button>
                 </div>
             </template>
         </div>       
@@ -34,20 +46,44 @@ import { mapGetters } from "vuex";
 import { mapMutations } from "vuex";
 export default {
   directives: { focus },
+  data(){
+    return {
+      formClass:["form-control", "form-control-sm"]
+    }
+  },
   computed: {
     ...mapGetters(["loadingList", "list", "options"])
+
   },
   methods: {
     ...mapMutations(["costCalculate"]),
     removeListItem(index) {
       this.$delete(this.list, index);
       this.$store.commit("costCalculate");
+    },
+    crossOutText(i){
+      console.log(i);
+      this.$set(this.list, i, true);
+      //this.formClass.push("cross-out-text").join(" ");
+      console.log(this.formClass);
     }
   }
 };
 </script>
 
 <style scoped>
+.cross-out-text{
+  text-decoration: line-through;
+}
+.ch{
+  padding-top: 5px;
+}
+.chList{
+  display: grid;
+  grid-template-columns: 1.5% 5% 20% 7% 4%;
+  grid-gap:5px;
+  margin:2px 0;
+}
 .form-control{
   border-left:none;
   border-top:none;
@@ -93,14 +129,8 @@ export default {
   border:none;
   background-color: rgb(238, 94, 94);
   color:rgb(247, 238, 238);
+}
 
-}
-.chList{
-  display: grid;
-  grid-template-columns: 10% 20% 10% 4%;
-  grid-gap:3px;
-  margin:2px 0;
-}
 </style>
 
 

@@ -25,9 +25,13 @@ export default new Vuex.Store({
     show:false,
     nameOfList:null,
     dbSuccess:false,
-    nullOfList: false
+    nullOfList: false,
+    isModalVisible: false
   },
   getters: {
+    isModalVisible(state){
+      return state.isModalVisible;
+    },
     nullOfList(state){
       return state.nullOfList;
     },
@@ -75,6 +79,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    modalVisible(state,payload){
+      state.isModalVisible = payload;
+    },
     showMessage(state,payload){
       state.show = payload
       state.dbSuccess = payload
@@ -85,17 +92,17 @@ export default new Vuex.Store({
       if (list) {
         let i = list.length;
         if (i == 0 || list == null) {
-          list.unshift({ cost: "", name: "", sel: "", show: true });
+          list.unshift({ cost: "", name: "", sel: "", show: true, check: false });
         } else {
           if (list[0].cost == "" || list[0].name == "" || list[0].sel == "") {
             state.show = !state.show; /// Показывать сообщение если не все поля заполнены
           } else {
-            list.unshift({ cost: "", name: "", sel: "", show: true });
+            list.unshift({ cost: "", name: "", sel: "", show: true, check: false });
           }
         }
       } else {
         list = [];
-        list.unshift({ cost: "", name: "", sel: "", show: true });
+        list.unshift({ cost: "", name: "", sel: "", show: true, check: false });
       }
       state.list = list;
     },
@@ -197,6 +204,14 @@ export default new Vuex.Store({
       curNameOfList == "10_"+curMonth ? curNameOfList = "10_"+prevMonth : null
       curNameOfList == "25_"+curMonth ? curNameOfList = curNameOfList.replace("25", "10") : null
       this.dispatch("getPrevList",curNameOfList);
+    },
+    resetCheckboxes(state){
+      let list = state.list;
+      for (let i in list){
+        list[i].check = false;
+      }
+      this.commit("setList", list)
+      this.dispatch("putList", { 0: state.nameOfList, 1: list });
     }
   },
   actions: {
