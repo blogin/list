@@ -11,7 +11,6 @@
             class="form-control form-control-sm"
             v-on:keyup.enter="costCalculate"
             :style="l.check ? 'text-decoration: line-through' : null"
-            :ref="'costs'"
           >
           <input
             type="text"
