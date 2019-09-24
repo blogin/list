@@ -9,7 +9,14 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "ajv": "^5.0.0",
+    "axios": "^0.18.0",
+    "bootstrap": "^4.3.1",
+    "install": "^0.12.2",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.15.0",
     "vue": "^2.6.10",
+    "vue-directive-long-press": "^1.1.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

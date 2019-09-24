@@ -1,0 +1,13 @@
+table,
+td {
+    border: 1px solid lightgray;
+    border-collapse: collapse;
+    font-size: 18px;
+    vertical-align: bottom;
+    margin-bottom: 10px;
+}
+
+td{
+    padding: 5px;
+    height: 25px;
+}
