@@ -1,0 +1,76 @@
+label {
+  margin: 0 5px;
+}
+.option-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  position: relative;
+  top: 3px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 17px;
+  width: 17px;
+  transition: all 0.15s ease-out 0s;
+  background: #b8b7b7;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  outline: none;
+  position: relative;
+  /* z-index: 1000; */
+}
+
+.option-input-hide {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  /* z-index: 1000; */
+}
+
+.option-input:hover {
+  background: #d6d6d6;
+}
+
+.option-input:checked {
+  background: #b8b7b7;
+}
+
+.option-input:disabled {
+  background: #d6d6d6;
+}
+
+.option-input:checked::before {
+  width: 21px;
+  position: absolute;
+  content: '✔';
+  display: inline-block;
+  font-size: 21px;
+  text-align: center;
+  line-height: 14px;
+  color: green;
+}
+
+.option-input:checked::after {
+  background: #40e0d0;
+  content: '';
+  display: block;
+  position: relative;
+  z-index: 100;
+}
+
+.option-input.radio {
+  border-radius: 50%;
+}
+
+.option-input.radio::after {
+  border-radius: 50%;
+}
+
+/* --- */
