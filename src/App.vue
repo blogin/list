@@ -31,9 +31,9 @@ export default {
     let d = new Date().toLocaleString("ru", {day: "numeric"});
     let day;
     d >20 ? day = "25" : day = "10";
-    this.$store.dispatch("getOptions"); // загружается список опций
-    this.$store.dispatch("getList", day); // Загружается список расходов и применяются опции
     this.$store.dispatch("getYearSalary"); // Загружается ЗП и расчитываются расходы от списка расходов
+    this.$store.dispatch("getList", day); // Загружается список расходов и применяются опции    
+    this.$store.dispatch("getOptions"); // загружается список опций    
   }
 };
 </script>

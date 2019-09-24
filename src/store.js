@@ -190,7 +190,9 @@ export default new Vuex.Store({
       }
     },
     setNameOfList(state,payload){
-      state.nameOfList = payload
+      state.nameOfList = payload;
+      console.log("state.nameOfList - " + state.nameOfList);
+      console.log("state.list - " + state.list);
     },
     setListToDB(state,data){
       state.dbSuccess = true;
@@ -234,15 +236,20 @@ export default new Vuex.Store({
     getPrevList: async ({ commit }, name) => {
       let { data } = await Axios.get('https://list-of-product.firebaseio.com/list/'+name+'.json');
       commit('setList', data);
-      commit('setNameOfList', name);
+      //commit('setNameOfList', name);
     },
     putOptions: async ({ commit }, obj) => {
       let { data } = await Axios.put('https://list-of-product.firebaseio.com/db_opt.json', obj);
       commit('setOptions', data);
     },
     putList: async ({ commit }, obj) => {
-      let { data } = await Axios.put('https://list-of-product.firebaseio.com/list/'+obj[0]+'.json', obj[1]);
-      commit('setListToDB', data);
+      await Axios.put('https://list-of-product.firebaseio.com/list/'+obj[0]+'.json', obj[1])
+        .then((resp) => {
+          commit('setListToDB', resp.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
     },
   }
 })

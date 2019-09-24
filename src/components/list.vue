@@ -10,20 +10,20 @@
             v-model="l.cost"
             class="form-control form-control-sm"
             v-on:keyup.enter="costCalculate"
-            :style="l.check ? 'text-decoration: line-through' : null"
+            :style="l.check ? 'text-decoration: line-through #E30101' : null"
           >
           <input
             type="text"
             v-model="l.name"
             key="1"
             class="form-control form-control-sm"
-            :style="l.check ? 'text-decoration: line-through' : null"
+            :style="l.check ? 'text-decoration: line-through #E30101' : null"
           >
           <select
             v-model="l.sel"
             @change="costCalculate"
             class="form-control form-control-sm"
-            :style="l.check ? 'text-decoration: line-through' : null"
+            :style="l.check ? 'text-decoration: line-through #E30101' : null"
           >
             <option v-for="(el,iEl) in options" :key="iEl">{{ el.name }}</option>
           </select>
@@ -62,6 +62,7 @@ export default {
     crossOutText(i) {
       console.log(i);
       this.$set(this.list, i, true);
+      console.log("crossOutText",i)
       //this.formClass.push("cross-out-text").join(" ");
       console.log(this.formClass);
     }
@@ -83,7 +84,7 @@ export default {
   }
 }
 .cross-out-text {
-  text-decoration: line-through;
+  text-decoration: line-through red;
 }
 .ch {
   padding-top: 5px;

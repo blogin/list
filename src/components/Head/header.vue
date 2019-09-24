@@ -43,8 +43,14 @@ import { mapGetters } from "vuex";
 import Options from './options.vue';
 import Controls from "./controls.vue";
 export default {
+  data(){
+      return {
+          select_25:false,
+          select_10:false
+      }
+  },
   computed: {
-    ...mapGetters(["salYear", "money", "loadingYear", "costs", "showCosts", "toSber", "toNal"]),
+    ...mapGetters(["salYear", "money", "loadingYear", "costs", "showCosts", "toSber", "toNal","nameOfList"]),
     getMonth() {
       for (let i = 1; i < 13; i++) {
         let a = new Date().toLocaleString("ru", { month: "long" });
