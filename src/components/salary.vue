@@ -38,10 +38,10 @@ export default {
   },
   computed: {
     ...mapGetters(["salary", "restOfMoney", "allExpenses"]),
-    curMonth(){
-      let m = new Date().toLocaleString("ru", {month: "long"});
-      m = m.slice(0,-1)+"e";
-      return m      
+    curMonth() {
+      let m = new Date().toLocaleString("ru", { month: "long" });
+      m = m.slice(0, -1) + "e";
+      return m;
     }
   },
   mounted() {
@@ -63,13 +63,13 @@ export default {
 </script>
 
 <style scoped>
-table{
+table {
   width: 100%;
 }
-td:nth-child(1){
+td:nth-child(1) {
   width: 180px;
 }
-td:nth-child(2){
+td:nth-child(2) {
   width: auto;
 }
 .green {

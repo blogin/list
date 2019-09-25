@@ -73,7 +73,7 @@ export default {
   background-color: #f5f5f5;
 }
 .content::-webkit-scrollbar {
-  width: 6px;
+  width: 3px;
   background-color: #f5f5f5;
 }
 .content::-webkit-scrollbar-thumb {
@@ -100,17 +100,6 @@ export default {
     #f7f7f7 100%
   );
   border-image-slice: 1;
-}
+} 
 
-hr {
-  height: 8px;
-  background-image: linear-gradient(
-    to left,
-    #f7f7f7 0%,
-    #b30707 50%,
-    #f7f7f7 100%
-  );
-  border: 0;
-  height: 1px;
-}
 </style>

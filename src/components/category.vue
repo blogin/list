@@ -11,7 +11,7 @@
               :checked="cat.checked"
               :value="cat.name"
               v-model="checkedCategory"
-            >
+            />
             {{ cat.name }}
           </label>
         </td>
@@ -22,42 +22,55 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import loading from "@/components/loading.vue";
 
 export default {
   data() {
     return {
       checkedCategory: [],
-      cat:null
     };
+  },
+  methods: {
+    ...mapActions(["getCategory"]),
+    ...mapMutations(["sortList", "setCheckedCategory"]),
+  },
+  computed: {
+    ...mapGetters(["category", "list"])
   },
   watch: {
     checkedCategory() {
+      /** 
+       * При изменении списка отмеченных категорий
+       */
+
+      // Пересчитываем список
       this.list.forEach(e => {
         ~this.checkedCategory.indexOf(e["sel"])
           ? (e["show"] = true)
           : (e["show"] = false);
       });
-      // this.checkedCategory.forEach((e, i) => {
-      //   this.cat.forEach(el => {
-      //     el.name == e ? el.checked = true : null
-      //   })        
-      // });
-      this.$store.commit("sortList");
+
+      // Делаем копию массива объектов категорий
+      let chCat = JSON.parse(JSON.stringify(this.category));
+
+      // Перебираем копию и изменяем в ней состояние checked для отмеченных категорий
+      chCat.forEach((e,i) => ~this.checkedCategory.indexOf(e.name) ? chCat[i].checked = true : chCat[i].checked = false)
+      
+      // Записываем в отдельный state который будем использовать чтобы пересылать на сервер
+      this.setCheckedCategory(chCat);
+
+      this.sortList();
     },
     category() {
-      this.cat = JSON.parse(JSON.stringify(this.category));
+      // Заполняем массив названий категорий как они пришли с сервера
       this.checkedCategory = this.category
         .filter(e => e.checked)
         .map(e => e.name);
     }
   },
-  computed: {
-    ...mapGetters(["category", "list"]),
-  },
   mounted() {
-    this.$store.dispatch("getCategory");
+    this.getCategory();
   },
   components: {
     loading

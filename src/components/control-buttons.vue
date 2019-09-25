@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="div-input">
-      <input type="text" v-model="c" placeholder="Цена" class="pr-cost">
-      <input type="text" v-model="n" placeholder="Название" class="pr-name">
+      <input type="text" v-model="c" placeholder="Цена" class="pr-cost" />
+      <input type="text" v-model="n" placeholder="Название" class="pr-name" />
       <select v-model="o" class="pr-attr">
         <option v-for="c in category" :key="c.id">{{ c.name }}</option>
       </select>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -25,17 +25,19 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["putList", "putCategory"]),
+    ...mapMutations(["showSnBar", "calcCategory", "calcSalary", "sortList"]),
     save() {
-      this.$store.dispatch("putList");
-      this.$store.dispatch("putCategory");
+      this.putList();
+      this.putCategory();
     },
     add() {
       if (!this.c || !this.n || !this.o) {
-        this.$store.commit("showSnBar", "Необходимо заполнить все поля");
+        this.showSnBar("Необходимо заполнить все поля");
         return;
       }
       if (!this.c.match(/^\d+$/)) {
-        this.$store.commit("showSnBar", "Стоимость должна быть в цифрах");
+        this.showSnBar("Стоимость должна быть в цифрах");
         return;
       }
       this.list || this.list.length > 0
@@ -56,13 +58,13 @@ export default {
             }
           ]);
       (this.o = null), (this.n = null), (this.c = null);
-      this.$store.commit("calcCategory");
-      this.$store.commit("calcSalary");
-      this.$store.commit("sortList");
+      this.calcCategory();
+      this.calcSalary();
+      this.sortList();
     },
     reset() {
       this.list.forEach(e => (e["check"] = false));
-      this.$store.commit("sortList");
+      this.sortList();
     }
   },
   computed: {
@@ -157,16 +159,15 @@ button {
 }
 
 /* primary */
-.primary {  
+.primary {
   border: 1px solid #666699;
   background-color: transparent;
-  color: #666699; 
+  color: #666699;
   outline: none;
   transition: 0.5s;
   padding: 3px 10px;
-  border-radius:8px;
+  border-radius: 8px;
   cursor: pointer;
-  
 }
 
 .primary:hover {
