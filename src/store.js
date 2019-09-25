@@ -22,8 +22,12 @@ export default new Vuex.Store({
     editingItem: {},
     msgSnackBar: null,
     showSnackBar: false,
+    showModal:false
   },
   getters: {
+    showModal(state){
+      return state.showModal;
+    },
     msgSnackBar(state) {
       return state.msgSnackBar;
     },
@@ -53,6 +57,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setShowModal(state, payload) {
+      state.showModal = payload;
+    },
     showSnBar(state, payload) {
       state.msgSnackBar = payload;
       state.showSnackBar = true;
