@@ -2,7 +2,7 @@
   <div class="root">
     <loading v-if="!list"></loading>
 
-    <table v-if="list">
+    <table v-if="list" class="tbl-list">
       <tr
         v-for="(l,i) in list"
         :key="i"
@@ -139,6 +139,7 @@ export default {
 </script>
 
 <style scoped>
+
 button {
   height: 25px;
   border: 1px solid #b30707;
@@ -159,7 +160,7 @@ button:active {
 }
 input,
 select {
-  font-size: 18px;
+  font-size: 15px;
   background-color: transparent;
   border-top: none;
   border-left: none;
@@ -172,6 +173,7 @@ table {
   margin: auto;
 }
 td:nth-child(1) {
+  vertical-align: middle;
   width: 65px;
   text-align: center;
 }
@@ -181,6 +183,7 @@ td:nth-child(1) input {
 }
 
 td:nth-child(2) {
+  vertical-align: middle;
   width: 250px;
   text-align: left;
 }
@@ -189,11 +192,13 @@ td:nth-child(2) input {
   text-align: left;
 }
 td:nth-child(3) {
+  vertical-align: middle;
   width: 90px;
   text-align: center;
 }
 table,
 td:nth-child(4) {
+  vertical-align: middle;
   border: none;
 }
 

@@ -11,3 +11,10 @@ td{
     padding: 5px;
     height: 25px;
 }
+
+@media (max-width: 800px) {
+
+    .tbl-list td{
+        font-size:16px;
+    }
+}
