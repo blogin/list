@@ -1,5 +1,6 @@
 <template>
   <div id="app" class="grid">
+    
     <div class="control">
       <salary v-if="list"></salary>
       <category v-if="list"></category>
@@ -9,7 +10,8 @@
     <div class="content">
       <list></list>
     </div>
-    <snackbar :class="{ show: showSnackBar }"/>
+
+    <snackbar :class="{ show: showSnackBar }" />
     <modal v-if="showModal"></modal>
   </div>
 </template>
@@ -34,7 +36,7 @@ export default {
     modal
   },
   computed: {
-    ...mapGetters(["list", "showSnackBar","showModal"])
+    ...mapGetters(["list", "showSnackBar", "showModal"])
   }
 };
 </script>
@@ -59,7 +61,7 @@ export default {
 }
 .grid {
   display: grid;
-  grid-template-columns: 30% 1fr;
+  grid-template-columns: 25% 1fr;
 }
 .control,
 .content {
@@ -72,11 +74,11 @@ export default {
 }
 /* Скрол для content*/
 .content::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: inset 0 0 0px rgba(0, 0, 0, 0.3);
   background-color: #f5f5f5;
 }
 .content::-webkit-scrollbar {
-  width: 3px;
+  width: 0px;
   background-color: #f5f5f5;
 }
 .content::-webkit-scrollbar-thumb {
@@ -103,6 +105,5 @@ export default {
     #f7f7f7 100%
   );
   border-image-slice: 1;
-} 
-
+}
 </style>

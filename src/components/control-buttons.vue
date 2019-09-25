@@ -89,7 +89,7 @@ export default {
   height: 25px;
 }
 .pr-attr {
-  width: 30%;
+  width: 25%;
   margin: 5px 7px;
   height: 25px;
   padding: 0 3px;
