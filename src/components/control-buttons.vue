@@ -9,7 +9,7 @@
       <a class="primary pr-btn-add" @click="add()">+</a>
     </div>
     <button class="success" @click="save()">Сохранить</button>
-    <button class="secondary">Список</button>
+    <button class="secondary" @click="setShowModal(true)">Список</button>
     <button class="danger" @click="reset()">Сбросить</button>
   </div>
 </template>
@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     ...mapActions(["putList", "putCategory"]),
-    ...mapMutations(["showSnBar", "calcCategory", "calcSalary", "sortList"]),
+    ...mapMutations(["showSnBar", "calcCategory", "calcSalary", "sortList", "setShowModal"]),
     save() {
       this.putList();
       this.putCategory();

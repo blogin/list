@@ -10,6 +10,7 @@
       <list></list>
     </div>
     <snackbar :class="{ show: showSnackBar }"/>
+    <modal v-if="showModal"></modal>
   </div>
 </template>
 
@@ -19,6 +20,7 @@ import category from "@/components/category.vue";
 import list from "@/components/list.vue";
 import buttons from "@/components/control-buttons.vue";
 import snackbar from "@/components/snackbar.vue";
+import modal from "@/components/Modal.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -28,10 +30,11 @@ export default {
     category,
     list,
     buttons,
-    snackbar
+    snackbar,
+    modal
   },
   computed: {
-    ...mapGetters(["list", "showSnackBar"])
+    ...mapGetters(["list", "showSnackBar","showModal"])
   }
 };
 </script>

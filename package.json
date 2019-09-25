@@ -9,11 +9,11 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "ajv": "^5.0.0",
     "axios": "^0.18.1",
     "bootstrap": "^4.3.1",
     "install": "^0.12.2",
     "jquery": "^3.4.1",
+    "material-icons": "^0.3.1",
     "popper.js": "^1.15.0",
     "vue": "^2.6.10",
     "vue-directive-long-press": "^1.1.0",
@@ -24,6 +24,7 @@
     "@vue/cli-plugin-unit-mocha": "^3.8.0",
     "@vue/cli-service": "^3.8.0",
     "@vue/test-utils": "1.0.0-beta.29",
+    "ajv": "^6.9.1",
     "babel-eslint": "^10.0.1",
     "chai": "^4.1.2",
     "eslint": "^5.16.0",
