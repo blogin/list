@@ -15,7 +15,7 @@ export default new Vuex.Store({
   state: {
     salary: null,
     category: null,
-    checkedCategory: [],
+    checkedCategory: null,
     list: null,
     allExpenses: null,
     restOfMoney: null,
@@ -73,7 +73,7 @@ export default new Vuex.Store({
     },
     setCategory(state, payload) {
       state.category = payload;
-      state.checkedCategory = payload.filter(e => e.checked == true).map(e => e.name);
+      // state.checkedCategory = payload.filter(e => e.checked == true).map(e => e.name);
       this.commit("calcCategory");
     },
     setList(state, payload) {
@@ -105,6 +105,10 @@ export default new Vuex.Store({
     },
     sortListByCheck(state){
       state.list = state.list.filter(e => !e.check).concat(state.list.filter(e => e.check));
+    },
+    setCheckedCategory(state,payload){
+      state.checkedCategory = payload;
+      console.log("state.checkedCategory", state.checkedCategory);
     }
   },
   actions: {
@@ -168,8 +172,7 @@ export default new Vuex.Store({
           console.log("error -> ", error);
         });
     },
-
-    putList: async ({ commit, state }) => {
+    putList: async ({ commit, state, dispatch }) => {
       let day = new Date().toLocaleString("ru", {day: "2-digit"});
       let month = new Date().toLocaleString("en", {month: "long"});
       let nameOfList;
@@ -178,22 +181,24 @@ export default new Vuex.Store({
 
       await Axios.put('list/' + nameOfList + '.json', state.list)
         .then((response) => {
-          response.data ? commit("showSnBar", "Список успешно сохранен") : commit("showSnBar", "Проблемы при сохранении списка");
+          if(response.data){
+            dispatch("putCategory")
+          }else{
+            commit("showSnBar", "Проблемы при сохранении списка");
+          } 
         })
         .catch((error) => {
           console.log("error -> ", error);
         });
     },
-
     putCategory: async ({ commit, state }) => {
-      console.log("category ->",state.category);
-      // await Axios.put('db_opt.json', state.category)
-      //   .then((response) => {
-      //     response.data ? commit("showSnBar", "Категории успешно сохранены") : commit("showSnBar", "Проблемы при сохранении категорий");
-      //   })
-      //   .catch((error) => {
-      //     console.log("error -> ", error);
-      //   });
+      await Axios.put('db_opt.json', state.checkedCategory)
+        .then((response) => {
+          response.data ? commit("showSnBar", "Данные успешно сохранены") : commit("showSnBar", "Проблемы при сохранении категорий");
+        })
+        .catch((error) => {
+          console.log("error -> ", error);
+        });
     },
   }
 })

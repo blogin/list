@@ -17,7 +17,7 @@
             v-model="l.cost"
             @blur="endEditing(l)"
             @keyup.enter="endEditing(l)"
-          >
+          />
         </td>
         <td
           v-if="l !== editingItem"
@@ -35,7 +35,7 @@
             v-model="l.name"
             @blur="endEditing(l)"
             @keyup.enter="endEditing(l)"
-          >
+          />
         </td>
         <td
           v-if="l !== editingItem"
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import loading from "@/components/loading.vue";
 import LongPress from "vue-directive-long-press";
 
@@ -91,39 +91,46 @@ export default {
     "long-press": LongPress
   },
   methods: {
-    check(i){
-      this.$set(this.list[i],"check",!this.list[i].check);
+    ...mapActions(["getList"]),
+    ...mapMutations([
+      "sortListByCheck",
+      "setEditingItem",
+      "calcCategory",
+      "calcSalary",
+      "sortList",
+      "sortListByCheck"
+    ]),
+    check(i) {
+      this.$set(this.list[i], "check", !this.list[i].check);
       this.$store.commit("sortListByCheck");
     },
     edit(item) {
       this.$store.commit("setEditingItem", item);
     },
     endEditing(item) {
-      this.$store.commit("setEditingItem", {});
-      this.$store.commit("calcCategory");
-      this.$store.commit("calcSalary");
-      this.$store.commit("sortList");
-      this.$store.commit("sortListByCheck");
+      this.setEditingItem({});
+      this.calcCategory();
+      this.calcSalary();
+      this.sortList();
+      this.sortListByCheck();
     },
     del(i) {
       this.$delete(this.list, i);
-      this.$store.commit("calcCategory");
-      this.$store.commit("calcSalary");
-      this.$store.commit("sortList");
+      this.calcCategory();
+      this.calcSalary();
+      this.sortList();
     }
   },
   watch: {
     list() {
       this.checkedItems = this.list.filter(e => e.check).map(e => e.name);
-      console.log("watch list ->", this.list);
-      console.log("watch checkedItems ->", this.checkedItems);
     }
   },
   computed: {
     ...mapGetters(["list", "category", "editingItem"])
   },
   mounted() {
-    this.$store.dispatch("getList");
+    this.getList();
   },
   components: {
     loading
@@ -132,11 +139,6 @@ export default {
 </script>
 
 <style scoped>
-@media (width: 800px) {
-  table {
-    margin:auto;
-  }
-}
 button {
   height: 25px;
   border: 1px solid #b30707;
@@ -149,7 +151,7 @@ button {
 button:hover {
   transition: 0.5s;
   background-color: #b30707;
-  color:white;
+  color: white;
 }
 button:active {
   box-shadow: -442px -0px #b30707;
@@ -203,7 +205,6 @@ td:nth-child(4) {
   border-color: white;
   color: white;
 }
-
 .green td:nth-child(4) {
   background: #f7f7f7;
 }
