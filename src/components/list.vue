@@ -178,7 +178,7 @@ td:nth-child(1) {
   text-align: center;
 }
 td:nth-child(1) input {
-  width: 58px;
+  width: 35px;
   text-align: center;
 }
 
@@ -188,7 +188,7 @@ td:nth-child(2) {
   text-align: left;
 }
 td:nth-child(2) input {
-  width: 243px;
+  width: 130px;
   text-align: left;
 }
 td:nth-child(3) {
