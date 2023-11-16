@@ -9,7 +9,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "axios": "^0.18.1",
+    "axios": "^1.6.2",
     "bootstrap": "^4.3.1",
     "install": "^0.12.2",
     "jquery": "^3.4.1",
@@ -20,15 +20,12 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-eslint": "^3.8.0",
-    "@vue/cli-plugin-unit-mocha": "^3.8.0",
-    "@vue/cli-service": "^3.8.0",
+    "@vue/cli-plugin-unit-mocha": "^5.0.8",
+    "@vue/cli-service": "^5.0.8",
     "@vue/test-utils": "1.0.0-beta.29",
     "ajv": "^6.9.1",
     "babel-eslint": "^10.0.1",
     "chai": "^4.1.2",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
     "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {
@@ -37,8 +34,7 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
+      "plugin:vue/essential"
     ],
     "rules": {},
     "parserOptions": {

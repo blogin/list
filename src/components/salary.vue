@@ -4,9 +4,9 @@
     <div v-if="salary">
       <table>
         <tr>
-          <td>{{ curDay > 15 ? "Аванс" : "Зап.плата" }} в {{ curMonth }}</td>
+          <td>{{ curDay > 13 ? "Аванс" : "Зап.плата" }} в {{ curMonth }}</td>
           <td>
-            <output style="color:green;">{{ curDay > 15 ? salary[0].backfire : salary[0].salary }}</output>
+            <output style="color:green;">{{ curDay > 13 ? salary[0].backfire : salary[0].salary }}</output>
           </td>
         </tr>
         <tr>
