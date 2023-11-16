@@ -85,6 +85,7 @@ export default new Vuex.Store({
     },
     setList(state, payload) {
       state.list = payload;
+      this.commit("sortListByCheck")
     },
     calcCategory(state) {
       state.category.forEach(e => {
@@ -104,7 +105,7 @@ export default new Vuex.Store({
         return (a + b)
       });
       // Подсчет остатка денег исходя из расходов
-      day > 15 ? state.restOfMoney = state.salary[0].backfire - state.allExpenses : state.restOfMoney = state.salary[0].salary - state.allExpenses;
+      day > 13 ? state.restOfMoney = state.salary[0].backfire - state.allExpenses : state.restOfMoney = state.salary[0].salary - state.allExpenses;
       state.restOfMoney = state.restOfMoney.toFixed(2);
     },
     sortList(state) {
@@ -148,8 +149,8 @@ export default new Vuex.Store({
       let pMmonth = monthLocalizedString(new Date().getMonth() - 1, 'en');
       let nameOfList, pNameOfList;
 
-      day > 15 ? nameOfList = "25_" + month.toLocaleLowerCase() : nameOfList = "10_" + month.toLocaleLowerCase();
-      day > 15 ? pNameOfList = "10_" + month.toLocaleLowerCase() : pNameOfList = "25_" + pMmonth.toLocaleLowerCase();
+      day > 13 ? nameOfList = "25_" + month.toLocaleLowerCase() : nameOfList = "10_" + month.toLocaleLowerCase();
+      day > 13 ? pNameOfList = "10_" + month.toLocaleLowerCase() : pNameOfList = "25_" + pMmonth.toLocaleLowerCase();
 
       // nameOfList = '10_june';
 
@@ -184,7 +185,7 @@ export default new Vuex.Store({
       let month = new Date().toLocaleString("en", {month: "long"});
       let nameOfList;
 
-      day > 15 ? nameOfList = "25_" + month.toLocaleLowerCase() : nameOfList = "10_" + month.toLocaleLowerCase();
+      day > 13 ? nameOfList = "25_" + month.toLocaleLowerCase() : nameOfList = "10_" + month.toLocaleLowerCase();
 
       await Axios.put('list/' + nameOfList + '.json', state.list)
         .then((response) => {
