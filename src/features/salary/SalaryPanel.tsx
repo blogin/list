@@ -1,5 +1,7 @@
 import type { BudgetSummary, SalaryMonth } from '@/domain/types'
+import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { sidebarRowClass } from '@/components/layout/sidebar-row'
 import { Skeleton } from '@/components/ui/skeleton'
 import { statPillVariants } from '@/components/ui/stat-pill'
 import { formatMoney, monthInPrepositional } from '@/lib/format'
@@ -23,11 +25,11 @@ export function SalaryPanel({ loading, salary, budget, compact = false }: Salary
     ) : (
       <Card>
         <CardHeader>
-          <Skeleton className="h-5 w-40" />
+          <Skeleton className="h-6 w-44" />
         </CardHeader>
         <CardContent className="space-y-2">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-10 w-full rounded-lg" />
         </CardContent>
       </Card>
     )
@@ -43,23 +45,24 @@ export function SalaryPanel({ loading, salary, budget, compact = false }: Salary
 
   if (compact) {
     return (
-      <div className="grid grid-cols-3 gap-2">
-        <StatPill label={budgetLabel} value={formatMoney(budgetAmount)} tone="budget" />
-        <StatPill
-          label="Остаток"
-          value={formatMoney(budget.restOfMoney)}
-          tone={budget.restOfMoney >= 0 ? 'success' : 'expense'}
-        />
-        <StatPill label="Расходы" value={formatMoney(budget.allExpenses)} tone="expense" />
+      <div className="space-y-2">
+        <BudgetHeading budgetLabel={budgetLabel} monthLabel={monthLabel} compact />
+        <div className="grid grid-cols-3 gap-2">
+          <StatPill label="Бюджет" value={formatMoney(budgetAmount)} tone="budget" />
+          <StatPill
+            label="Остаток"
+            value={formatMoney(budget.restOfMoney)}
+            tone={budget.restOfMoney >= 0 ? 'success' : 'expense'}
+          />
+          <StatPill label="Расходы" value={formatMoney(budget.allExpenses)} tone="expense" />
+        </div>
       </div>
     )
   }
 
   return (
     <div className="space-y-3">
-      <h2 className="text-sm font-medium text-muted-foreground">
-        {budgetLabel} в {monthLabel}
-      </h2>
+      <BudgetHeading budgetLabel={budgetLabel} monthLabel={monthLabel} />
       <div className="grid gap-2">
         <StatRow label="Бюджет" value={formatMoney(budgetAmount)} tone="budget" />
         <StatRow
@@ -70,6 +73,28 @@ export function SalaryPanel({ loading, salary, budget, compact = false }: Salary
         <StatRow label="Расходы" value={formatMoney(budget.allExpenses)} tone="expense" />
       </div>
     </div>
+  )
+}
+
+function BudgetHeading({
+  budgetLabel,
+  monthLabel,
+  compact = false,
+}: {
+  budgetLabel: string
+  monthLabel: string
+  compact?: boolean
+}) {
+  return (
+    <h2
+      className={cn(
+        'leading-tight tracking-tight',
+        compact ? 'text-base font-semibold' : 'text-lg font-semibold md:text-xl',
+      )}
+    >
+      {budgetLabel}{' '}
+      <span className="font-medium text-muted-foreground">в {monthLabel}</span>
+    </h2>
   )
 }
 
@@ -102,18 +127,11 @@ function StatRow({
   tone: 'budget' | 'success' | 'expense'
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border bg-card px-3 py-2">
+    <div className={sidebarRowClass}>
       <span className="text-sm text-muted-foreground">{label}</span>
-      <span
-        className={cn(
-          'text-sm font-semibold tabular-nums',
-          tone === 'budget' && 'text-sky-700',
-          tone === 'success' && 'text-emerald-700',
-          tone === 'expense' && 'text-rose-700',
-        )}
-      >
+      <Badge variant={tone} className="tabular-nums">
         {value}
-      </span>
+      </Badge>
     </div>
   )
 }
