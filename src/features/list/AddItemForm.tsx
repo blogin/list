@@ -18,11 +18,14 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { cn } from '@/lib/utils'
 
 interface AddItemFormProps {
   categories: Category[]
   onAdd: (input: { cost: string; name: string; sel: string }) => boolean
 }
+
+const formFieldClass = 'h-10 w-full text-sm'
 
 function AddItemFields({
   categories,
@@ -44,22 +47,22 @@ function AddItemFields({
   }
 
   return (
-    <div className="grid gap-2 md:grid-cols-[88px_minmax(0,1fr)_132px_auto]">
+    <div className="grid items-center gap-2 md:grid-cols-[88px_minmax(0,1fr)_132px_auto]">
       <Input
         inputMode="numeric"
         placeholder="Цена"
         value={cost}
         onChange={(event) => setCost(event.target.value)}
-        className="h-10 text-base md:text-sm"
+        className={formFieldClass}
       />
       <Input
         placeholder="Название"
         value={name}
         onChange={(event) => setName(event.target.value)}
-        className="h-10 text-base md:text-sm"
+        className={formFieldClass}
       />
       <Select value={sel} onValueChange={setSel}>
-        <SelectTrigger className="h-10 w-full text-base md:text-sm">
+        <SelectTrigger className={cn(formFieldClass, '!h-10 py-0')}>
           <SelectValue placeholder="Категория" />
         </SelectTrigger>
         <SelectContent>
@@ -70,7 +73,7 @@ function AddItemFields({
           ))}
         </SelectContent>
       </Select>
-      <Button type="button" className="h-10 px-4" onClick={handleAdd}>
+      <Button type="button" size="lg" className="h-10 px-4" onClick={handleAdd}>
         <Plus className="size-4" />
         <span className="md:hidden">Добавить</span>
       </Button>
