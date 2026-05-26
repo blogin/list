@@ -1,16 +1,14 @@
 import { useState } from 'react'
 import { CategoriesAdminPanel } from '@/features/admin/CategoriesAdminPanel'
-import { ListsAdminPanel } from '@/features/admin/ListsAdminPanel'
 import { SalaryAdminPanel } from '@/features/admin/SalaryAdminPanel'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-type AdminTab = 'categories' | 'salary' | 'lists'
+type AdminTab = 'categories' | 'salary'
 
 const TABS: { id: AdminTab; label: string }[] = [
   { id: 'categories', label: 'Категории' },
   { id: 'salary', label: 'Зарплата' },
-  { id: 'lists', label: 'Списки' },
 ]
 
 export function AdminPage() {
@@ -21,7 +19,7 @@ export function AdminPage() {
       <div>
         <h2 className="text-lg font-semibold md:text-xl">Управление базой</h2>
         <p className="text-sm text-muted-foreground">
-          Категории, зарплата и списки периодов Firebase RTDB.
+          Категории и зарплата в Firebase RTDB.
         </p>
       </div>
 
@@ -41,7 +39,6 @@ export function AdminPage() {
 
       {tab === 'categories' ? <CategoriesAdminPanel /> : null}
       {tab === 'salary' ? <SalaryAdminPanel /> : null}
-      {tab === 'lists' ? <ListsAdminPanel /> : null}
     </div>
   )
 }
