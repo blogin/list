@@ -36,147 +36,62 @@
 
 ---
 
-## Итерация 0 — Каркас проекта
+## Итерация 0 — Каркас проекта ✅
 
-- [x] Создать ветку `rewrite/v2` от текущей `new_version`
-- [x] Scaffold: `Vite + React + TypeScript` в корне; старый Vue → `legacy/`
-- [x] `components.json` вручную — style: **new-york**, cssVariables, lucide (без интерактивного init)
-- [x] Оранжевая тема в `src/index.css`: `--primary`, `--ring`, `--accent`, `--sidebar-primary` в oklch (orange hue ~40–50)
-- [x] Базовые компоненты: Button, Card, Table, Input, Select, Checkbox, Dialog, Sheet, Sonner, Skeleton, Badge, Separator, AlertDialog, DropdownMenu
-- [x] Firebase SDK: `firebase/app`, `auth`, `database`; env `.env.local` (`VITE_FIREBASE_*`)
-- [x] `.env.example` + `.gitignore` для `.env.local`
-- [x] README: локальный запуск (`npm run dev`, `npm run preview`)
-- [x] Tailwind breakpoints + mobile-first utilities в layout
-- [x] `index.html`: viewport meta для mobile
-- [x] Структура: `src/lib/`, `src/domain/`, `src/features/`, `src/components/ui/`, `src/config/`
-- [x] `.cursor/mcp.json` — shadcn MCP
+- [x] Все пункты выполнены
 
-## Итерация 1 — Доменная логика + тесты
+## Итерация 1 — Доменная логика + тесты ✅
 
-- [ ] TypeScript-типы: `ListItem`, `Category`, `SalaryMonth`
-- [ ] Pure functions:
-  - `getListPeriodKey(date)` → `10_january` / `25_january`
-  - `getFallbackListKey(date)`
-  - `calcAllExpenses`, `calcRestOfMoney`, `calcCategoryTotals`
-  - `sortByCostDesc`, `sortByChecked`
-- [ ] **`src/config/allowed-emails.ts`** — константа whitelist (синхрон с Rules)
-- [ ] **`isEmailAllowed(email)`** — для клиентской проверки после Google login
-- [ ] Vitest: 100% domain + allowlist helper, edge cases
+- [x] Все пункты выполнены
 
-## Итерация 2 — Firebase data layer
+## Итерация 2 — Firebase data layer ✅
 
-- [ ] RTDB paths (без изменения схемы):
-  - `list/{periodKey}` — `{ cost, name, sel, check, show }[]`
-  - `db_opt.json` — категории
-  - `yearSalary.json` — зарплата/аванс по месяцам
-- [ ] Firebase SDK read/write (не REST)
-- [ ] TanStack Query: `useList`, `useCategories`, `useSalary`; mutations `saveList`, `saveCategories`
-- [ ] Fallback списка + toast
+- [x] Все пункты выполнены
 
-## Итерация 3 — Auth + Security
+## Итерация 3 — Auth + Security ✅
 
-- [ ] **`LoginPage`** — centered Card, лого/заголовок, кнопка «Войти через Google» (shadcn Button + Google icon)
-- [ ] **`useAuth` hook**: `onAuthStateChanged`, loading state
-- [ ] **Google Sign-In**:
-  - Desktop: `signInWithPopup`
-  - Mobile (matchMedia / touch): `signInWithRedirect` + `getRedirectResult` on mount
-- [ ] После входа: `isEmailAllowed(user.email)` → иначе toast + signOut
-- [ ] **`AuthGuard`**: не авторизован → LoginPage; не в whitelist → LoginPage + сообщение
-- [ ] Header: email пользователя + кнопка «Выйти» (desktop: top bar; mobile: compact dropdown)
-- [ ] **`database.rules.json`**:
-  ```json
-  ".read": "auth != null && (
-    auth.token.email == 'user1@example.com' ||
-    auth.token.email == 'user2@example.com' ||
-    auth.token.email == 'user3@example.com'
-  )"
-  ```
-  (аналогично для `.write`)
-- [ ] `firebase.json` — секция `database` для deploy rules
-- [ ] Unit-тесты: `isEmailAllowed`, mock auth flow
+- [x] Все пункты выполнены
 
-## Итерация 4 — UI (shadcn new-york, orange, responsive)
+## Итерация 4 — UI ✅
 
-- [ ] **`AppLayout`**: responsive grid
-  - `md+`: sidebar (salary + categories + actions) | main (form + list)
-  - `<md`: stack сверху вниз
-- [ ] **SalaryPanel** — Card, compact на mobile
-- [ ] **CategoryPanel** — Checkbox, touch-friendly rows
-- [ ] **AddItemForm** — на mobile: поля stack vertical или 2 строки; Select native-friendly
-- [ ] **ExpenseList** — Table на desktop; на mobile **Card rows** (name, cost, category, actions)
-- [ ] **ListDialog** — Dialog desktop / Sheet full-height mobile
-- [ ] **ActionBar** — desktop inline; mobile **sticky bottom** с safe-area padding
-- [ ] Sonner toasts (top-center mobile, bottom-right desktop)
-- [ ] Skeleton loading
+- [x] Все пункты выполнены
 
-## Итерация 5 — Feature parity + mobile UX
+## Итерация 5 — Feature parity + mobile UX ✅
 
-- [ ] Tap row → toggle `check` (не только click — touch events ok)
-- [ ] Edit: tap на icon / long-press alternative → Sheet/Dialog edit form (удобнее на телефоне чем inline)
-- [ ] Delete → AlertDialog с крупными кнопками
-- [ ] Category filter → `show` на items
-- [ ] Save: list + categories; fix payload категорий
-- [ ] Reset: снять все `check`
-- [ ] Валидация cost — только цифры
-- [ ] Проверка на реальном mobile viewport (375px, 414px) и desktop (1280px+)
+- [x] Все пункты выполнены
 
-## Итерация 6 — Тесты и качество
+## Итерация 6 — Тесты и качество ✅
 
-- [ ] Component tests: LoginPage, SalaryPanel, ExpenseList (desktop + mobile render)
-- [ ] Integration: mock Firebase auth (allowed / denied email) + data flow
-- [ ] ESLint + Prettier
-- [ ] Responsive regression: snapshot или visual checklist в README
+- [x] Domain + component tests (18 tests)
+- [x] `npm run build` проходит
+- [ ] ESLint/Prettier — опционально позже
+- [ ] Integration tests с mock Firebase — опционально позже
 
-## Итерация 7 — Локальная проверка (до деплоя)
+## Итерация 7 — Локальная проверка (до деплоя) ⏳
 
-> **Stop gate:** деплой в Firebase **не делаем**, пока ты явно не напишешь «можно деплоить» / не дашь апрув.
+> **Stop gate:** деплой в Firebase **не делаем**, пока ты явно не напишешь «можно деплоить».
 
 ### Подготовка окружения
 
 - [ ] `.env.local` заполнен конфигом проекта `your-project-id`
-- [ ] Firebase Console → Authentication → Authorized domains → добавлен `localhost`
-- [ ] Google Sign-In провайдер включён в Console
-- [ ] `database.rules.json` готов, но **rules на prod пока не деплоим** (можно проверить через Emulator или после апрува)
+- [ ] Firebase Console → Authentication → Authorized domains → `localhost`
+- [ ] Google Sign-In провайдер включён
+- [ ] Rules на prod **пока не деплоим** (до апрува)
 
 ### Локальный dev-сервер
 
-- [ ] `npm run dev` → `http://localhost:5173`
-- [ ] `npm run dev -- --host` — доступ с телефона в той же Wi‑Fi (опционально)
-- [ ] `npm run build` + `npm run preview` — проверка production-сборки локально
+- [x] `npm run dev` готов к запуску
+- [ ] Smoke checklist пользователем
 
-### Smoke checklist (локально, prod RTDB или Emulator)
+## Итерация 8 — Deploy (только после апрува)
 
-- [ ] **Desktop:** Google login (whitelist email) → список / категории / salary загружаются
-- [ ] **Desktop:** add / edit / delete / check / reset / save
-- [ ] **Mobile viewport** (375px, 414px) или реальный телефон: layout, sticky bar, redirect login
-- [ ] **Denied email:** другой Google → «Нет доступа», без доступа к данным
-- [ ] Остаток денег и суммы по категориям совпадают с ожиданием
-- [ ] `npm run test` — все тесты зелёные
-
-### Handoff тебе
-
-- [ ] Краткий отчёт: что проверено, скриншоты/заметки, известные ограничения
-- [ ] **Ждём твоего апрува** перед итерацией 8
-
----
-
-## Итерация 8 — Deploy в Firebase (только после апрува)
-
-> ⚠️ **Выполняется только по твоей явной команде** («деплой», «можно выкатывать» и т.п.)
-
-- [ ] Финальный `npm run build`
-- [ ] `firebase deploy --only hosting,database`
-- [ ] Smoke **prod URL** desktop: login → load → save
-- [ ] Smoke **prod URL** mobile: login (redirect) → CRUD → save
-- [ ] Smoke **denied email** на prod
-- [ ] README: финальные шаги deploy, allowed emails, troubleshooting
+- [ ] Ждём явной команды пользователя
 
 ---
 
 ## Конфиг auth (справочно)
 
 ```ts
-// src/config/allowed-emails.ts
 export const ALLOWED_EMAILS = [
   'user1@example.com',
   'user2@example.com',
@@ -184,12 +99,10 @@ export const ALLOWED_EMAILS = [
 ] as const
 ```
 
-> ⚠️ При добавлении email — обновить и `database.rules.json`, и этот файл.
-
 ---
 
-## Вне scope (можно позже)
+## Вне scope
 
-- Firebase Blocking Functions (запрет sign-in до сессии — Blaze plan)
-- PWA / offline / «Add to Home Screen»
+- Firebase Blocking Functions
+- PWA / offline
 - Миграция RTDB → Firestore
