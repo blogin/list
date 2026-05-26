@@ -9,8 +9,7 @@ import {
   isValidCostInput,
   removeItemAt,
   resetAllChecks,
-  sortByChecked,
-  sortByCostDesc,
+  sortListItems,
   toggleItemChecked,
 } from '@/domain'
 import type { Category, ListItem } from '@/domain/types'
@@ -39,7 +38,7 @@ export function useShoppingApp() {
 
     const nextCategories = calcCategoryTotals(categoriesQuery.data, listQuery.data.items)
     setCategories(nextCategories)
-    setItems(sortByChecked(applyCategoryVisibility(nextCategories, listQuery.data.items)))
+    setItems(sortListItems(applyCategoryVisibility(nextCategories, listQuery.data.items), nextCategories))
 
     if (listQuery.data.usedFallback && !fallbackNotified.current) {
       fallbackNotified.current = true
@@ -58,7 +57,7 @@ export function useShoppingApp() {
   )
 
   function refreshTotals(nextItems: ListItem[], nextCategories = categories) {
-    setItems(sortByChecked(nextItems))
+    setItems(sortListItems(nextItems, nextCategories))
     setCategories(calcCategoryTotals(nextCategories, nextItems))
   }
 
@@ -72,7 +71,7 @@ export function useShoppingApp() {
       return false
     }
 
-    const nextItems = sortByCostDesc([createListItem(input), ...items])
+    const nextItems = [createListItem(input), ...items]
     refreshTotals(applyCategoryVisibility(categories, nextItems))
     return true
   }
@@ -83,7 +82,7 @@ export function useShoppingApp() {
 
   function updateItem(index: number, patch: Partial<ListItem>) {
     const nextItems = items.map((item, i) => (i === index ? { ...item, ...patch } : item))
-    refreshTotals(sortByCostDesc(nextItems))
+    refreshTotals(nextItems)
   }
 
   function deleteItem(index: number) {

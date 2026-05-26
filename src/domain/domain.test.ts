@@ -16,8 +16,8 @@ import {
 import {
   createListItem,
   resetAllChecks,
-  sortByChecked,
   sortByCostDesc,
+  sortListItems,
   toggleItemChecked,
 } from '@/domain/list-utils'
 import type { Category, ListItem, SalaryMonth } from '@/domain/types'
@@ -113,10 +113,47 @@ describe('list-utils', () => {
   })
 
   it('moves checked items to the bottom', () => {
-    expect(sortByChecked(sampleItems).map((item) => item.name)).toEqual([
+    expect(sortListItems(sampleItems, sampleCategories).map((item) => item.name)).toEqual([
       'Milk',
       'Bus',
       'Bread',
+    ])
+  })
+
+  it('sorts unchecked items by category order then cost descending', () => {
+    const categories: Category[] = [
+      { name: 'Transport', checked: true, total: 0 },
+      { name: 'Food', checked: true, total: 0 },
+    ]
+    const items: ListItem[] = [
+      { cost: '50', name: 'Bread', sel: 'Food', check: false, show: true },
+      { cost: '200', name: 'Bus', sel: 'Transport', check: false, show: true },
+      { cost: '100', name: 'Milk', sel: 'Food', check: false, show: true },
+    ]
+
+    expect(sortListItems(items, categories).map((item) => item.name)).toEqual([
+      'Bus',
+      'Milk',
+      'Bread',
+    ])
+  })
+
+  it('returns unchecked item to its category position', () => {
+    const categories: Category[] = [
+      { name: 'Food', checked: true, total: 0 },
+      { name: 'Transport', checked: true, total: 0 },
+    ]
+    const items: ListItem[] = [
+      { cost: '100', name: 'Milk', sel: 'Food', check: false, show: true },
+      { cost: '200', name: 'Bus', sel: 'Transport', check: false, show: true },
+      { cost: '50', name: 'Bread', sel: 'Food', check: true, show: true },
+    ]
+
+    const unchecked = toggleItemChecked(items, 2)
+    expect(sortListItems(unchecked, categories).map((item) => item.name)).toEqual([
+      'Milk',
+      'Bread',
+      'Bus',
     ])
   })
 

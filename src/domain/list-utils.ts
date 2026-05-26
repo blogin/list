@@ -1,10 +1,28 @@
-import type { ListItem } from './types'
+import type { Category, ListItem } from './types'
 import { parseCost } from './calculations'
 
 export function sortByCostDesc(items: ListItem[]): ListItem[] {
   return [...items].sort((a, b) => parseCost(b.cost) - parseCost(a.cost))
 }
 
+/** Unchecked: category order, then cost desc. Checked: at the bottom, stable order. */
+export function sortListItems(items: ListItem[], categories: Category[]): ListItem[] {
+  const categoryOrder = new Map(categories.map((category, index) => [category.name, index]))
+
+  function compareUnchecked(a: ListItem, b: ListItem): number {
+    const categoryA = categoryOrder.get(a.sel) ?? Number.MAX_SAFE_INTEGER
+    const categoryB = categoryOrder.get(b.sel) ?? Number.MAX_SAFE_INTEGER
+    if (categoryA !== categoryB) return categoryA - categoryB
+    return parseCost(b.cost) - parseCost(a.cost)
+  }
+
+  const unchecked = items.filter((item) => !item.check).sort(compareUnchecked)
+  const checked = items.filter((item) => item.check)
+
+  return [...unchecked, ...checked]
+}
+
+/** @deprecated Use sortListItems */
 export function sortByChecked(items: ListItem[]): ListItem[] {
   return [...items.filter((item) => !item.check), ...items.filter((item) => item.check)]
 }
