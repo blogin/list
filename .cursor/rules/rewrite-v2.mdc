@@ -1,0 +1,14 @@
+---
+description: Rewrite v2 workflow — commits, push, user gate
+globs:
+alwaysApply: true
+---
+
+# Rewrite v2
+
+- Работа только в ветке `rewrite/v2`.
+- После каждой итерации из TASKLIST.md: commit с сообщением на русском + `git push origin rewrite/v2`.
+- TASKLIST.md и доки — только в `rewrite/v2`, не в `new_version`.
+- Итерация 7: локальная проверка на prod RTDB — **остановиться и позвать пользователя**.
+- Итерация 8 (deploy): **только после явного апрува пользователя**.
+- shadcn: использовать MCP (`get_add_command_for_items`) или `npx shadcn add ... -y -o`; не запускать интерактивный `shadcn init`.

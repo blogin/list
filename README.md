@@ -1,34 +1,40 @@
-# list_v2
+# list_v2 — React rewrite
 
-## Project setup
-```
+Личный трекер расходов и списка покупок. Ветка `rewrite/v2`.
+
+## Локальный запуск
+
+```bash
 npm install
+cp .env.example .env.local   # заполнить ключи Firebase
+npm run dev
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+Откроется http://localhost:5173
+
+Для телефона в той же сети:
+
+```bash
+npm run dev -- --host
 ```
 
-### Compiles and minifies for production
-```
+Production-сборка локально:
+
+```bash
 npm run build
+npm run preview
 ```
 
-### Run your tests
-```
-npm run test
-```
+## Firebase Console (перед первым login)
 
-### Lints and fixes files
-```
-npm run lint
-```
+1. Authentication → Sign-in method → **Google** — включить
+2. Authentication → Settings → **Authorized domains** → добавить `localhost`
+3. Скопировать Web App config в `.env.local`
 
-### Run your unit tests
-```
-npm run test:unit
-```
+## MCP
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+В `.cursor/mcp.json` подключён shadcn MCP. После изменения — Reload Window в Cursor.
+
+## Legacy
+
+Vue-приложение перенесено в `legacy/`.
