@@ -1,3 +1,5 @@
+import { parseCost } from '@/domain/calculations'
+
 const MONTHS_IN = [
   'январе',
   'феврале',
@@ -18,5 +20,9 @@ export function monthInPrepositional(date: Date = new Date()): string {
 }
 
 export function formatMoney(value: number): string {
-  return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(value)
+  return `${new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(value)} ₽`
+}
+
+export function formatItemCost(cost: string | number): string {
+  return formatMoney(parseCost(cost))
 }

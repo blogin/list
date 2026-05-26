@@ -26,6 +26,8 @@ const badgeVariants = cva(
           "border-sky-200 bg-sky-50 text-sky-800 [a&]:hover:bg-sky-100",
         category:
           "border-border bg-muted text-muted-foreground [a&]:hover:bg-muted/80",
+        amount:
+          "rounded-md border-border/70 bg-background font-semibold text-foreground tabular-nums shadow-xs [a&]:hover:bg-muted/40",
       },
     },
     defaultVariants: {

@@ -12,8 +12,8 @@ describe('SalaryPanel', () => {
       />,
     )
 
-    expect(screen.getByText(/1[\s\u00a0]000/)).toBeInTheDocument()
-    expect(screen.getByText('650')).toBeInTheDocument()
-    expect(screen.getByText('350')).toBeInTheDocument()
+    expect(screen.getByText(/1[\s\u00a0]000\s*₽/)).toBeInTheDocument()
+    expect(screen.getByText(/650\s*₽/)).toBeInTheDocument()
+    expect(screen.getByText(/350\s*₽/)).toBeInTheDocument()
   })
 })

@@ -37,6 +37,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { formatItemCost } from '@/lib/format'
 import { cn } from '@/lib/utils'
 
 interface ExpenseListProps {
@@ -187,15 +188,23 @@ export function ExpenseList({
                 key={`${item.name}-${index}`}
                 className={cn(item.check && 'bg-emerald-50/70')}
               >
-                <TableCell className="py-2 font-semibold tabular-nums">
-                  <button type="button" className="w-full text-left" onClick={() => onToggleCheck(index)}>
-                    {item.cost}
+                <TableCell className="py-2.5">
+                  <button type="button" className="text-left" onClick={() => onToggleCheck(index)}>
+                    <Badge
+                      variant="amount"
+                      className={cn('text-sm', item.check && 'opacity-60')}
+                    >
+                      {formatItemCost(item.cost)}
+                    </Badge>
                   </button>
                 </TableCell>
-                <TableCell className="py-2">
+                <TableCell className="py-2.5">
                   <button
                     type="button"
-                    className={cn('w-full text-left', item.check && 'text-muted-foreground line-through')}
+                    className={cn(
+                      'w-full text-left text-[15px] leading-snug',
+                      item.check && 'text-muted-foreground line-through',
+                    )}
                     onClick={() => onToggleCheck(index)}
                   >
                     {item.name}

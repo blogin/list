@@ -21,6 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useIsMobile } from '@/hooks/use-mobile'
+import { formatItemCost } from '@/lib/format'
 import { cn } from '@/lib/utils'
 
 interface ListPreviewProps {
@@ -45,8 +46,12 @@ export function ListPreview({ open, items, onOpenChange }: ListPreviewProps) {
         <TableBody>
           {items.map((item, index) => (
             <TableRow key={`${item.name}-${index}`} className={cn(item.check && 'bg-emerald-50/70')}>
-              <TableCell>{item.cost}</TableCell>
-              <TableCell>{item.name}</TableCell>
+              <TableCell>
+                <Badge variant="amount" className="text-sm">
+                  {formatItemCost(item.cost)}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-[15px]">{item.name}</TableCell>
               <TableCell>
                 <Badge variant="category">{item.sel}</Badge>
               </TableCell>
