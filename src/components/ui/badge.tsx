@@ -27,7 +27,7 @@ const badgeVariants = cva(
         category:
           "border-border bg-muted text-muted-foreground [a&]:hover:bg-muted/80",
         amount:
-          "rounded-md border-border/70 bg-background font-semibold text-foreground tabular-nums shadow-xs [a&]:hover:bg-muted/40",
+          "rounded-md border-border bg-secondary font-semibold text-foreground tabular-nums shadow-xs [a&]:hover:bg-secondary/80",
       },
     },
     defaultVariants: {

@@ -36,7 +36,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { useIsMobile } from '@/hooks/use-mobile'
 import { formatItemCost } from '@/lib/format'
 import { cn } from '@/lib/utils'
 
@@ -55,7 +54,6 @@ export function ExpenseList({
   onUpdate,
   onDelete,
 }: ExpenseListProps) {
-  const isMobile = useIsMobile()
   const [editIndex, setEditIndex] = useState<number | null>(null)
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null)
   const [draft, setDraft] = useState<Partial<ListItem>>({})
@@ -102,75 +100,11 @@ export function ExpenseList({
     />
   )
 
-  if (isMobile) {
+  if (visibleItems.length === 0) {
     return (
       <>
-        <div className="overflow-hidden rounded-lg border bg-card">
-          {visibleItems.length === 0 ? (
-            <div className="px-3 py-8 text-center text-sm text-muted-foreground">
-              Нет позиций для выбранных категорий
-            </div>
-          ) : (
-            visibleItems.map(({ item, index }, rowIndex) => (
-              <div
-                key={`${item.name}-${index}`}
-                className={cn(
-                  'flex items-start gap-1.5 px-3 py-2.5',
-                  rowIndex > 0 && 'border-t',
-                  item.check && 'border-l-[3px] border-l-emerald-500 bg-emerald-50/80',
-                )}
-              >
-                <button
-                  type="button"
-                  className="min-w-0 flex-1 text-left"
-                  onClick={() => onToggleCheck(index)}
-                >
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <Badge
-                      variant="amount"
-                      className={cn('text-sm', item.check && 'opacity-60')}
-                    >
-                      {formatItemCost(item.cost)}
-                    </Badge>
-                    <Badge variant="category" className="shrink-0">
-                      {item.sel}
-                    </Badge>
-                  </div>
-                  <p
-                    className={cn(
-                      'mt-1 leading-snug break-words text-pretty',
-                      item.name.length > 40
-                        ? 'text-[13px]'
-                        : item.name.length > 22
-                          ? 'text-[14px]'
-                          : 'text-[15px]',
-                      item.check && 'text-muted-foreground line-through',
-                    )}
-                  >
-                    {item.name}
-                  </p>
-                </button>
-                <div className="flex shrink-0 pt-0.5">
-                  <Button
-                    size="icon-sm"
-                    variant="ghost"
-                    className="size-8"
-                    onClick={() => openEdit(index)}
-                  >
-                    <Pencil className="size-3.5" />
-                  </Button>
-                  <Button
-                    size="icon-sm"
-                    variant="ghost"
-                    className="size-8"
-                    onClick={() => setDeleteIndex(index)}
-                  >
-                    <Trash2 className="size-3.5" />
-                  </Button>
-                </div>
-              </div>
-            ))
-          )}
+        <div className="overflow-hidden rounded-lg border bg-card px-3 py-8 text-center text-sm text-muted-foreground">
+          Нет позиций для выбранных категорий
         </div>
         {editSheet}
         {deleteDialog}
@@ -180,7 +114,62 @@ export function ExpenseList({
 
   return (
     <>
-      <div className="overflow-hidden rounded-lg border bg-card">
+      <div className="overflow-hidden rounded-lg border bg-card md:hidden">
+        {visibleItems.map(({ item, index }, rowIndex) => (
+          <div
+            key={`mobile-${item.name}-${index}`}
+            className={cn(
+              'flex items-start gap-1.5 px-3 py-2.5',
+              rowIndex > 0 && 'border-t',
+              item.check && 'border-l-[3px] border-l-emerald-500 bg-emerald-50/80',
+            )}
+          >
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <ItemAmountBadge cost={item.cost} checked={item.check} />
+                <Badge variant="category" className="shrink-0">
+                  {item.sel}
+                </Badge>
+              </div>
+              <button
+                type="button"
+                className="mt-1 w-full text-left"
+                onClick={() => onToggleCheck(index)}
+              >
+                <p
+                  className={cn(
+                    'leading-snug break-words text-pretty',
+                    mobileNameSizeClass(item.name),
+                    item.check && 'text-muted-foreground line-through',
+                  )}
+                >
+                  {item.name}
+                </p>
+              </button>
+            </div>
+            <div className="flex shrink-0 pt-0.5">
+              <Button
+                size="icon-sm"
+                variant="ghost"
+                className="size-8"
+                onClick={() => openEdit(index)}
+              >
+                <Pencil className="size-3.5" />
+              </Button>
+              <Button
+                size="icon-sm"
+                variant="ghost"
+                className="size-8"
+                onClick={() => setDeleteIndex(index)}
+              >
+                <Trash2 className="size-3.5" />
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden overflow-hidden rounded-lg border bg-card md:block">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
@@ -193,17 +182,12 @@ export function ExpenseList({
           <TableBody>
             {visibleItems.map(({ item, index }) => (
               <TableRow
-                key={`${item.name}-${index}`}
+                key={`desktop-${item.name}-${index}`}
                 className={cn(item.check && 'bg-emerald-50/70')}
               >
                 <TableCell className="py-2.5">
                   <button type="button" className="text-left" onClick={() => onToggleCheck(index)}>
-                    <Badge
-                      variant="amount"
-                      className={cn('text-sm', item.check && 'opacity-60')}
-                    >
-                      {formatItemCost(item.cost)}
-                    </Badge>
+                    <ItemAmountBadge cost={item.cost} checked={item.check} />
                   </button>
                 </TableCell>
                 <TableCell className="py-2.5">
@@ -240,6 +224,20 @@ export function ExpenseList({
       {deleteDialog}
     </>
   )
+}
+
+function ItemAmountBadge({ cost, checked }: { cost: string; checked: boolean }) {
+  return (
+    <Badge variant="amount" className={cn('shrink-0 text-sm', checked && 'opacity-60')}>
+      {formatItemCost(cost)}
+    </Badge>
+  )
+}
+
+function mobileNameSizeClass(name: string): string {
+  if (name.length > 40) return 'text-[13px]'
+  if (name.length > 22) return 'text-[14px]'
+  return 'text-[15px]'
 }
 
 function EditSheet({
