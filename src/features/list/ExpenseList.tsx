@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -80,95 +79,138 @@ export function ExpenseList({
     setDraft({})
   }
 
+  const editSheet = (
+    <EditSheet
+      open={editIndex !== null}
+      draft={draft}
+      categories={categories}
+      onChange={setDraft}
+      onClose={() => setEditIndex(null)}
+      onSave={saveEdit}
+    />
+  )
+
+  const deleteDialog = (
+    <DeleteDialog
+      open={deleteIndex !== null}
+      onCancel={() => setDeleteIndex(null)}
+      onConfirm={() => {
+        if (deleteIndex !== null) onDelete(deleteIndex)
+        setDeleteIndex(null)
+      }}
+    />
+  )
+
   if (isMobile) {
     return (
       <>
-        <div className="space-y-2">
-          {visibleItems.map(({ item, index }) => (
-            <Card
-              key={`${item.name}-${index}`}
-              className={cn(item.check && 'border-primary/40 bg-primary/10')}
-            >
-              <CardContent className="flex items-start justify-between gap-3 p-4">
+        <div className="overflow-hidden rounded-lg border bg-card">
+          {visibleItems.length === 0 ? (
+            <div className="px-3 py-8 text-center text-sm text-muted-foreground">
+              Нет позиций для выбранных категорий
+            </div>
+          ) : (
+            visibleItems.map(({ item, index }, rowIndex) => (
+              <div
+                key={`${item.name}-${index}`}
+                className={cn(
+                  'flex items-center gap-2 px-3 py-2.5',
+                  rowIndex > 0 && 'border-t',
+                  item.check && 'border-l-[3px] border-l-emerald-500 bg-emerald-50/80',
+                )}
+              >
                 <button
                   type="button"
-                  className="min-h-11 flex-1 text-left"
+                  className="min-w-0 flex-1 text-left"
                   onClick={() => onToggleCheck(index)}
                 >
-                  <div className="font-medium">{item.name}</div>
-                  <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                    <span>{item.cost}</span>
-                    <Badge variant="secondary">{item.sel}</Badge>
+                  <div className="flex items-center gap-2">
+                    <span className="w-14 shrink-0 text-base font-semibold tabular-nums">
+                      {item.cost}
+                    </span>
+                    <span
+                      className={cn(
+                        'min-w-0 flex-1 truncate text-base',
+                        item.check && 'text-muted-foreground line-through',
+                      )}
+                    >
+                      {item.name}
+                    </span>
+                    <Badge variant="category" className="shrink-0">
+                      {item.sel}
+                    </Badge>
                   </div>
                 </button>
-                <div className="flex gap-1">
-                  <Button size="icon" variant="ghost" onClick={() => openEdit(index)}>
-                    <Pencil className="size-4" />
+                <div className="flex shrink-0">
+                  <Button
+                    size="icon-sm"
+                    variant="ghost"
+                    className="size-8"
+                    onClick={() => openEdit(index)}
+                  >
+                    <Pencil className="size-3.5" />
                   </Button>
-                  <Button size="icon" variant="ghost" onClick={() => setDeleteIndex(index)}>
-                    <Trash2 className="size-4" />
+                  <Button
+                    size="icon-sm"
+                    variant="ghost"
+                    className="size-8"
+                    onClick={() => setDeleteIndex(index)}
+                  >
+                    <Trash2 className="size-3.5" />
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              </div>
+            ))
+          )}
         </div>
-        <EditSheet
-          open={editIndex !== null}
-          draft={draft}
-          categories={categories}
-          onChange={setDraft}
-          onClose={() => setEditIndex(null)}
-          onSave={saveEdit}
-        />
-        <DeleteDialog
-          open={deleteIndex !== null}
-          onCancel={() => setDeleteIndex(null)}
-          onConfirm={() => {
-            if (deleteIndex !== null) onDelete(deleteIndex)
-            setDeleteIndex(null)
-          }}
-        />
+        {editSheet}
+        {deleteDialog}
       </>
     )
   }
 
   return (
     <>
-      <div className="overflow-hidden rounded-lg border">
+      <div className="overflow-hidden rounded-lg border bg-card">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="hover:bg-transparent">
               <TableHead className="w-24">Цена</TableHead>
               <TableHead>Название</TableHead>
-              <TableHead className="w-36">Категория</TableHead>
-              <TableHead className="w-28 text-right">Действия</TableHead>
+              <TableHead className="w-32">Категория</TableHead>
+              <TableHead className="w-24 text-right"> </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {visibleItems.map(({ item, index }) => (
               <TableRow
                 key={`${item.name}-${index}`}
-                className={cn(item.check && 'bg-primary/10')}
+                className={cn(item.check && 'bg-emerald-50/70')}
               >
-                <TableCell>
+                <TableCell className="py-2 font-semibold tabular-nums">
                   <button type="button" className="w-full text-left" onClick={() => onToggleCheck(index)}>
                     {item.cost}
                   </button>
                 </TableCell>
-                <TableCell>
-                  <button type="button" className="w-full text-left" onClick={() => onToggleCheck(index)}>
+                <TableCell className="py-2">
+                  <button
+                    type="button"
+                    className={cn('w-full text-left', item.check && 'text-muted-foreground line-through')}
+                    onClick={() => onToggleCheck(index)}
+                  >
                     {item.name}
                   </button>
                 </TableCell>
-                <TableCell>{item.sel}</TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-1">
+                <TableCell className="py-2">
+                  <Badge variant="category">{item.sel}</Badge>
+                </TableCell>
+                <TableCell className="py-2 text-right">
+                  <div className="flex justify-end gap-0.5">
                     <Button size="icon-sm" variant="ghost" onClick={() => openEdit(index)}>
-                      <Pencil className="size-4" />
+                      <Pencil className="size-3.5" />
                     </Button>
                     <Button size="icon-sm" variant="ghost" onClick={() => setDeleteIndex(index)}>
-                      <Trash2 className="size-4" />
+                      <Trash2 className="size-3.5" />
                     </Button>
                   </div>
                 </TableCell>
@@ -177,22 +219,8 @@ export function ExpenseList({
           </TableBody>
         </Table>
       </div>
-      <EditSheet
-        open={editIndex !== null}
-        draft={draft}
-        categories={categories}
-        onChange={setDraft}
-        onClose={() => setEditIndex(null)}
-        onSave={saveEdit}
-      />
-      <DeleteDialog
-        open={deleteIndex !== null}
-        onCancel={() => setDeleteIndex(null)}
-        onConfirm={() => {
-          if (deleteIndex !== null) onDelete(deleteIndex)
-          setDeleteIndex(null)
-        }}
-      />
+      {editSheet}
+      {deleteDialog}
     </>
   )
 }
@@ -224,19 +252,19 @@ function EditSheet({
             value={draft.cost ?? ''}
             onChange={(event) => onChange({ ...draft, cost: event.target.value })}
             placeholder="Цена"
-            className="h-11"
+            className="h-11 text-base"
           />
           <Input
             value={draft.name ?? ''}
             onChange={(event) => onChange({ ...draft, name: event.target.value })}
             placeholder="Название"
-            className="h-11"
+            className="h-11 text-base"
           />
           <Select
             value={draft.sel ?? ''}
             onValueChange={(value) => onChange({ ...draft, sel: value })}
           >
-            <SelectTrigger className="h-11 w-full">
+            <SelectTrigger className="h-11 w-full text-base">
               <SelectValue placeholder="Категория" />
             </SelectTrigger>
             <SelectContent>

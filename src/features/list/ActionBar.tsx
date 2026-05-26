@@ -19,19 +19,23 @@ export function ActionBar({
   return (
     <div
       className={cn(
-        'flex flex-wrap gap-2',
+        'flex gap-2',
         'md:static md:border-0 md:bg-transparent md:p-0',
         'fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur supports-[backdrop-filter]:bg-background/80',
         className,
       )}
     >
-      <Button className="h-11 flex-1 md:flex-none" disabled={saving} onClick={onSave}>
-        {saving ? 'Сохранение...' : 'Сохранить'}
+      <Button
+        className="h-11 min-w-0 flex-[1.4]"
+        disabled={saving}
+        onClick={onSave}
+      >
+        {saving ? '…' : 'Сохранить'}
       </Button>
-      <Button className="h-11 flex-1 md:flex-none" variant="secondary" onClick={onShowList}>
+      <Button className="h-11 min-w-0 flex-1" variant="outline" onClick={onShowList}>
         Список
       </Button>
-      <Button className="h-11 flex-1 md:flex-none" variant="outline" onClick={onReset}>
+      <Button className="h-11 min-w-0 flex-1" variant="ghost" onClick={onReset}>
         Сбросить
       </Button>
     </div>

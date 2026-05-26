@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { SalaryPanel } from '@/features/salary/SalaryPanel'
 
 describe('SalaryPanel', () => {
-  it('renders salary and budget on desktop-sized render', () => {
+  it('renders salary and budget values', () => {
     render(
       <SalaryPanel
         loading={false}
@@ -12,7 +12,7 @@ describe('SalaryPanel', () => {
       />,
     )
 
-    expect(screen.getByText('1000')).toBeInTheDocument()
+    expect(screen.getByText(/1[\s\u00a0]000/)).toBeInTheDocument()
     expect(screen.getByText('650')).toBeInTheDocument()
     expect(screen.getByText('350')).toBeInTheDocument()
   })

@@ -44,11 +44,11 @@ export function ListPreview({ open, items, onOpenChange }: ListPreviewProps) {
         </TableHeader>
         <TableBody>
           {items.map((item, index) => (
-            <TableRow key={`${item.name}-${index}`} className={cn(item.check && 'bg-primary/10')}>
+            <TableRow key={`${item.name}-${index}`} className={cn(item.check && 'bg-emerald-50/70')}>
               <TableCell>{item.cost}</TableCell>
               <TableCell>{item.name}</TableCell>
               <TableCell>
-                <Badge variant="secondary">{item.sel}</Badge>
+                <Badge variant="category">{item.sel}</Badge>
               </TableCell>
             </TableRow>
           ))}
