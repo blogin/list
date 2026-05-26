@@ -37,6 +37,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { formatItemCost } from '@/lib/format'
+import { useKeyboardInset } from '@/hooks/use-keyboard-inset'
 import { cn } from '@/lib/utils'
 
 interface ExpenseListProps {
@@ -270,9 +271,16 @@ function EditSheet({
   onClose: () => void
   onSave: () => void
 }) {
+  const keyboardInset = useKeyboardInset(open)
+
   return (
     <Sheet open={open} onOpenChange={(value) => !value && onClose()}>
-      <SheetContent side="bottom" className="max-h-[85svh] rounded-t-xl">
+      <SheetContent
+        side="bottom"
+        className="max-h-[85dvh] overflow-y-auto rounded-t-xl"
+        style={{ bottom: keyboardInset }}
+        onOpenAutoFocus={(event) => event.preventDefault()}
+      >
         <SheetHeader>
           <SheetTitle>Редактирование</SheetTitle>
         </SheetHeader>
