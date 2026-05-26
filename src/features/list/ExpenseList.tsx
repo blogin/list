@@ -115,7 +115,7 @@ export function ExpenseList({
               <div
                 key={`${item.name}-${index}`}
                 className={cn(
-                  'flex items-center gap-2 px-3 py-2.5',
+                  'flex items-start gap-1.5 px-3 py-2.5',
                   rowIndex > 0 && 'border-t',
                   item.check && 'border-l-[3px] border-l-emerald-500 bg-emerald-50/80',
                 )}
@@ -125,24 +125,32 @@ export function ExpenseList({
                   className="min-w-0 flex-1 text-left"
                   onClick={() => onToggleCheck(index)}
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="w-14 shrink-0 text-base font-semibold tabular-nums">
-                      {item.cost}
-                    </span>
-                    <span
-                      className={cn(
-                        'min-w-0 flex-1 truncate text-base',
-                        item.check && 'text-muted-foreground line-through',
-                      )}
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <Badge
+                      variant="amount"
+                      className={cn('text-sm', item.check && 'opacity-60')}
                     >
-                      {item.name}
-                    </span>
+                      {formatItemCost(item.cost)}
+                    </Badge>
                     <Badge variant="category" className="shrink-0">
                       {item.sel}
                     </Badge>
                   </div>
+                  <p
+                    className={cn(
+                      'mt-1 leading-snug break-words text-pretty',
+                      item.name.length > 40
+                        ? 'text-[13px]'
+                        : item.name.length > 22
+                          ? 'text-[14px]'
+                          : 'text-[15px]',
+                      item.check && 'text-muted-foreground line-through',
+                    )}
+                  >
+                    {item.name}
+                  </p>
                 </button>
-                <div className="flex shrink-0">
+                <div className="flex shrink-0 pt-0.5">
                   <Button
                     size="icon-sm"
                     variant="ghost"
