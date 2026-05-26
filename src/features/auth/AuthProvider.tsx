@@ -21,13 +21,26 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
+async function resolveUserEmail(user: User): Promise<string | null> {
+  if (user.email) return user.email
+
+  try {
+    await user.reload()
+  } catch {
+    return user.email
+  }
+
+  return user.email
+}
+
 async function enforceAllowedEmail(user: User | null): Promise<{
   user: User | null
   accessDenied: boolean
 }> {
   if (!user) return { user: null, accessDenied: false }
 
-  if (isEmailAllowed(user.email)) {
+  const email = await resolveUserEmail(user)
+  if (isEmailAllowed(email)) {
     return { user, accessDenied: false }
   }
 
@@ -43,33 +56,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let active = true
+    const auth = getFirebaseAuth()
 
-    async function bootstrap() {
+    async function initAuth() {
       try {
-        const redirectUser = await completeGoogleRedirectSignIn()
-        if (redirectUser && active) {
-          const result = await enforceAllowedEmail(redirectUser)
-          setUser(result.user)
-          setAccessDenied(result.accessDenied)
-        }
+        // На mobile после redirect getRedirectResult нужно дождаться до auth listener,
+        // иначе onAuthStateChanged успевает вернуть null и показывается экран входа.
+        await completeGoogleRedirectSignIn()
       } catch {
         toast.error('Не удалось завершить вход через Google')
       }
+
+      if (!active) return
+
+      const unsubscribe = onAuthStateChanged(auth, async (nextUser) => {
+        const result = await enforceAllowedEmail(nextUser)
+        if (!active) return
+        setUser(result.user)
+        setAccessDenied(result.accessDenied)
+        setLoading(false)
+      })
+
+      return unsubscribe
     }
 
-    void bootstrap()
+    let unsubscribe: (() => void) | undefined
 
-    const unsubscribe = onAuthStateChanged(getFirebaseAuth(), async (nextUser) => {
-      const result = await enforceAllowedEmail(nextUser)
-      if (!active) return
-      setUser(result.user)
-      setAccessDenied(result.accessDenied)
-      setLoading(false)
+    void initAuth().then((unsub) => {
+      unsubscribe = unsub
     })
 
     return () => {
       active = false
-      unsubscribe()
+      unsubscribe?.()
     }
   }, [])
 
