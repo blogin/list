@@ -1,36 +1,48 @@
-import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
-import { getDatabase } from 'firebase/database'
+import { type FirebaseApp, initializeApp } from 'firebase/app'
+import { type Auth, getAuth } from 'firebase/auth'
+import { type Database, getDatabase } from 'firebase/database'
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-}
-
-function requireConfig(value: string | undefined, key: string): string {
+function readEnv(key: string): string {
+  const value = import.meta.env[key as keyof ImportMetaEnv] as string | undefined
   if (!value) {
     throw new Error(`Missing Firebase env: ${key}. Copy .env.example to .env.local`)
   }
   return value
 }
 
-export const firebaseApp = initializeApp({
-  apiKey: requireConfig(firebaseConfig.apiKey, 'VITE_FIREBASE_API_KEY'),
-  authDomain: requireConfig(firebaseConfig.authDomain, 'VITE_FIREBASE_AUTH_DOMAIN'),
-  databaseURL: requireConfig(firebaseConfig.databaseURL, 'VITE_FIREBASE_DATABASE_URL'),
-  projectId: requireConfig(firebaseConfig.projectId, 'VITE_FIREBASE_PROJECT_ID'),
-  storageBucket: requireConfig(firebaseConfig.storageBucket, 'VITE_FIREBASE_STORAGE_BUCKET'),
-  messagingSenderId: requireConfig(
-    firebaseConfig.messagingSenderId,
-    'VITE_FIREBASE_MESSAGING_SENDER_ID',
-  ),
-  appId: requireConfig(firebaseConfig.appId, 'VITE_FIREBASE_APP_ID'),
-})
+let app: FirebaseApp | undefined
+let authInstance: Auth | undefined
+let databaseInstance: Database | undefined
 
-export const auth = getAuth(firebaseApp)
-export const database = getDatabase(firebaseApp)
+function getFirebaseApp(): FirebaseApp {
+  if (!app) {
+    app = initializeApp({
+      apiKey: readEnv('VITE_FIREBASE_API_KEY'),
+      authDomain: readEnv('VITE_FIREBASE_AUTH_DOMAIN'),
+      databaseURL: readEnv('VITE_FIREBASE_DATABASE_URL'),
+      projectId: readEnv('VITE_FIREBASE_PROJECT_ID'),
+      storageBucket: readEnv('VITE_FIREBASE_STORAGE_BUCKET'),
+      messagingSenderId: readEnv('VITE_FIREBASE_MESSAGING_SENDER_ID'),
+      appId: readEnv('VITE_FIREBASE_APP_ID'),
+    })
+  }
+  return app
+}
+
+export function getFirebaseAuth(): Auth {
+  if (!authInstance) {
+    authInstance = getAuth(getFirebaseApp())
+  }
+  return authInstance
+}
+
+export function getFirebaseDatabase(): Database {
+  if (!databaseInstance) {
+    databaseInstance = getDatabase(getFirebaseApp())
+  }
+  return databaseInstance
+}
+
+export function isFirebaseConfigured(): boolean {
+  return Boolean(import.meta.env.VITE_FIREBASE_API_KEY && import.meta.env.VITE_FIREBASE_DATABASE_URL)
+}
