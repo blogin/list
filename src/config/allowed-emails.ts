@@ -1,12 +1,14 @@
-export const allowedEmails = [
-  'user1@example.com',
-  'user2@example.com',
-  'user3@example.com',
-] as const
+export function parseAllowedEmails(raw: string | undefined): readonly string[] {
+  if (!raw?.trim()) return []
 
-export type AllowedEmail = (typeof allowedEmails)[number]
+  return raw
+    .split(',')
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean)
+}
 
-export function isEmailAllowed(email: string | null | undefined): email is AllowedEmail {
+export function isEmailAllowed(email: string | null | undefined): boolean {
   if (!email) return false
-  return (allowedEmails as readonly string[]).includes(email.toLowerCase())
+
+  return parseAllowedEmails(import.meta.env.VITE_ALLOWED_EMAILS).includes(email.toLowerCase())
 }

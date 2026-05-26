@@ -1,22 +1,3 @@
-const PREFIX = '[auth]'
-
-export function authLog(message: string, detail?: Record<string, unknown>) {
-  if (detail) {
-    console.info(PREFIX, message, detail)
-  } else {
-    console.info(PREFIX, message)
-  }
-}
-
-export function authLogError(message: string, error: unknown, detail?: Record<string, unknown>) {
-  console.error(PREFIX, message, {
-    ...detail,
-    code: getAuthErrorCode(error),
-    text: error instanceof Error ? error.message : String(error),
-    error,
-  })
-}
-
 export function getAuthErrorCode(error: unknown): string | undefined {
   if (typeof error === 'object' && error !== null && 'code' in error) {
     return String((error as { code: string }).code)
@@ -38,7 +19,7 @@ export function shouldFallbackToRedirect(code: string | undefined): boolean {
 
 export function canUseSessionStorage(): boolean {
   try {
-    const key = `${PREFIX}__storage_test__`
+    const key = '__auth_storage_test__'
     sessionStorage.setItem(key, '1')
     sessionStorage.removeItem(key)
     return true

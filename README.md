@@ -3,9 +3,6 @@
 Личный трекер расходов и списка покупок с бюджетом по периодам.  
 Firebase RTDB + Google Sign-In, responsive UI (mobile / desktop).
 
-**Prod:** https://your-project.web.app  
-**Firebase project:** `your-project-id`
-
 ---
 
 ## Стек
@@ -22,7 +19,7 @@ Firebase RTDB + Google Sign-In, responsive UI (mobile / desktop).
 - Node.js 20+
 - npm 10+
 - [Firebase CLI](https://firebase.google.com/docs/cli) (`npm i -g firebase-tools` или `npx firebase-tools`)
-- Доступ к Firebase-проекту `your-project-id` (для деплоя)
+- Свой Firebase-проект с Realtime Database и Google Auth (для деплоя)
 
 ---
 
@@ -44,7 +41,7 @@ npm run dev
 
 ### Переменные окружения (`.env.local`)
 
-Скопируйте Web App config из [Firebase Console](https://console.firebase.google.com/project/your-project-id/settings/general) → Your apps:
+Скопируйте Web App config из [Firebase Console](https://console.firebase.google.com/) → Project settings → Your apps:
 
 | Переменная | Пример |
 |------------|--------|
@@ -65,19 +62,15 @@ npm run dev
 1. **Authentication → Sign-in method → Google** — включить.
 2. **Authentication → Settings → Authorized domains:**
    - `localhost`
-   - `your-project.web.app`
-   - `your-project.firebaseapp.com`
-3. **Realtime Database** — данные уже в prod; rules в репозитории: `database.rules.json`.
+   - домен hosting после деплоя (`*.web.app`, `*.firebaseapp.com`)
+3. **Realtime Database** — шаблон rules: `database.rules.json.example`; локальный `database.rules.json` генерируется из `.env.local`.
 
 ### Whitelist email
 
-Доступ только для аккаунтов из `src/config/allowed-emails.ts` (дублируется в `database.rules.json`):
+Доступ только для аккаунтов из `VITE_ALLOWED_EMAILS` в `.env.local` (через запятую).  
+Те же email должны попасть в RTDB rules — перед деплоем выполняется `npm run rules:generate` (см. `database.rules.json.example`).
 
-- `user1@example.com`
-- `user2@example.com`
-- `user3@example.com`
-
-При смене списка — обновить оба файла и задеплоить rules.
+При смене списка — обновить `.env.local` и задеплоить rules.
 
 ---
 
@@ -91,8 +84,8 @@ npm run dev -- --host   # доступ с телефона в LAN (http://<IP>:5
 ### Проверка на телефоне
 
 1. `npm run dev -- --host`
-2. В Firebase Console добавить `localhost` (уже есть) — для LAN-IP авторизация может требовать добавления домена или тест через prod.
-3. Удобнее smoke на **prod URL** после деплоя.
+2. Для LAN-IP авторизация может требовать добавления домена в Firebase Console.
+3. Удобнее smoke-тест на задеплоенном hosting после `npm run deploy`.
 
 ---
 
@@ -122,10 +115,13 @@ npm run preview      # http://localhost:4173 — проверить dist/
 
 ## Деплой
 
-Первый раз — авторизация в Firebase CLI:
+Первый раз — авторизация в Firebase CLI и привязка проекта:
 
 ```bash
 npx firebase-tools login
+cp .firebaserc.example .firebaserc
+# указать свой project id в .firebaserc
+npx firebase-tools use --add
 ```
 
 Деплой hosting + rules:
@@ -149,7 +145,7 @@ npx firebase-tools deploy --only hosting,database
 
 ### После деплоя
 
-- Проверить https://your-project.web.app
+- Открыть URL из вывода Firebase CLI или Hosting в консоли
 - Google Sign-In на mobile (Chrome/Safari, не in-app browser)
 - CRUD списка, «Сохранить», экран «База» (категории / зарплата)
 
@@ -169,7 +165,8 @@ src/
     app/            # shell после входа
   lib/firebase/     # клиент, paths, CRUD
   components/ui/    # shadcn
-database.rules.json
+database.rules.json.example
+.firebaserc.example
 firebase.json
 .env.example
 ```

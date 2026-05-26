@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { signInWithGoogle } from '@/features/auth/google-sign-in'
-import { getAuthErrorCode } from '@/features/auth/auth-log'
+import { getAuthErrorCode } from '@/features/auth/auth-utils'
 
 export function LoginPage({ accessDenied = false }: { accessDenied?: boolean }) {
   const [loading, setLoading] = useState(false)

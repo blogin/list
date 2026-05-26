@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import { isEmailAllowed } from '@/config/allowed-emails'
+import { describe, expect, it, vi } from 'vitest'
+import { isEmailAllowed, parseAllowedEmails } from '@/config/allowed-emails'
 import {
   calcAllExpenses,
   calcCategoryTotals,
@@ -170,13 +170,22 @@ describe('list-utils', () => {
 })
 
 describe('allowed emails', () => {
+  it('parses comma-separated whitelist', () => {
+    expect(parseAllowedEmails(' user1@example.com,USER2@example.com ')).toEqual([
+      'user1@example.com',
+      'user2@example.com',
+    ])
+  })
+
   it('allows whitelisted google accounts', () => {
+    vi.stubEnv('VITE_ALLOWED_EMAILS', 'user1@example.com,user2@example.com')
     expect(isEmailAllowed('user1@example.com')).toBe(true)
-    expect(isEmailAllowed('user2@example.com')).toBe(true)
+    expect(isEmailAllowed('USER2@example.com')).toBe(true)
   })
 
   it('denies unknown accounts', () => {
-    expect(isEmailAllowed('other@gmail.com')).toBe(false)
+    vi.stubEnv('VITE_ALLOWED_EMAILS', 'user1@example.com')
+    expect(isEmailAllowed('other@example.com')).toBe(false)
     expect(isEmailAllowed(null)).toBe(false)
   })
 })

@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "deploy": "npm run build && firebase deploy --only hosting,database",
+    "rules:generate": "node scripts/generate-database-rules.mjs",
+    "deploy": "npm run build && npm run rules:generate && firebase deploy --only hosting,database",
     "deploy:hosting": "npm run build && firebase deploy --only hosting"
   },
   "dependencies": {

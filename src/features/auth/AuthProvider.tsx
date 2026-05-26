@@ -10,12 +10,7 @@ import { onAuthStateChanged, type User } from 'firebase/auth'
 import { toast } from 'sonner'
 import { isEmailAllowed } from '@/config/allowed-emails'
 import { completeGoogleRedirectSignIn, signOutUser } from '@/features/auth/google-sign-in'
-import {
-  authLog,
-  authLogError,
-  getAuthErrorCode,
-  isMissingRedirectStateError,
-} from '@/features/auth/auth-log'
+import { getAuthErrorCode, isMissingRedirectStateError } from '@/features/auth/auth-utils'
 import { getFirebaseAuth } from '@/lib/firebase/client'
 
 interface AuthContextValue {
@@ -46,7 +41,6 @@ async function enforceAllowedEmail(user: User | null): Promise<{
   if (!user) return { user: null, accessDenied: false }
 
   const email = await resolveUserEmail(user)
-  authLog('enforceAllowedEmail', { email, allowed: isEmailAllowed(email) })
   if (isEmailAllowed(email)) {
     return { user, accessDenied: false }
   }
@@ -69,10 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         await completeGoogleRedirectSignIn()
       } catch (error) {
-        if (isMissingRedirectStateError(error)) {
-          authLog('init: redirect state missing, continue with auth listener')
-        } else {
-          authLogError('init: redirect failed', error)
+        if (!isMissingRedirectStateError(error)) {
           const code = getAuthErrorCode(error)
           toast.error(
             code
@@ -85,7 +76,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!active) return
 
       const unsubscribe = onAuthStateChanged(auth, async (nextUser) => {
-        authLog('onAuthStateChanged', { uid: nextUser?.uid ?? null, email: nextUser?.email ?? null })
         const result = await enforceAllowedEmail(nextUser)
         if (!active) return
         setUser(result.user)

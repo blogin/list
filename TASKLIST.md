@@ -1,7 +1,6 @@
 # Rewrite v2 — итог
 
-> Ветка: **`rewrite/v2`**  
-> Prod: https://your-project.web.app
+> Ветка: **`rewrite/v2`**
 
 ## Стек
 
@@ -28,7 +27,7 @@ React 19 + Vite + TypeScript + shadcn/ui (radix-lyra) + Tailwind v4 + TanStack Q
 ## Auth
 
 - Google Sign-In only
-- Whitelist: `user1@example.com`, `user2@example.com`, `user3@example.com`
+- Whitelist: `VITE_ALLOWED_EMAILS` в `.env.local` + `database.rules.json` (генерируется перед деплоем)
 - Popup-first на mobile (fallback redirect)
 - Rules: `database.rules.json`
 
