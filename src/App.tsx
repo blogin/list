@@ -1,22 +1,57 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { AuthProvider, useAuth } from '@/features/auth/AuthProvider'
+import { LoginPage } from '@/features/auth/LoginPage'
+import { ShoppingPage } from '@/features/list/ShoppingPage'
 import { Toaster } from '@/components/ui/sonner'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { isFirebaseConfigured } from '@/lib/firebase/client'
 
-export default function App() {
+function MissingConfigPage() {
   return (
-    <div className="mx-auto flex min-h-svh max-w-lg flex-col items-center justify-center gap-6 p-6">
-      <Card className="w-full">
+    <div className="flex min-h-svh items-center justify-center p-4">
+      <Card className="w-full max-w-lg">
         <CardHeader>
-          <CardTitle>Список покупок</CardTitle>
+          <CardTitle>Нужна конфигурация Firebase</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            Rewrite v2 — каркас готов. Следующие итерации: domain, Firebase, auth, UI.
-          </p>
-          <Button className="w-full">Оранжевая тема new-york</Button>
+        <CardContent className="space-y-2 text-sm text-muted-foreground">
+          <p>Скопируй `.env.example` в `.env.local` и заполни ключи Web App из Firebase Console.</p>
+          <p>После этого перезапусти `npm run dev`.</p>
         </CardContent>
       </Card>
-      <Toaster richColors position="top-center" />
     </div>
+  )
+}
+
+function AppContent() {
+  const { user, loading, accessDenied } = useAuth()
+
+  if (loading) {
+    return (
+      <div className="flex min-h-svh items-center justify-center p-6">
+        <div className="w-full max-w-md space-y-3">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-32 w-full" />
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <LoginPage accessDenied={accessDenied} />
+  }
+
+  return <ShoppingPage />
+}
+
+export default function App() {
+  if (!isFirebaseConfigured()) {
+    return <MissingConfigPage />
+  }
+
+  return (
+    <AuthProvider>
+      <AppContent />
+      <Toaster richColors position="top-center" className="md:top-auto md:bottom-4 md:right-4" />
+    </AuthProvider>
   )
 }
