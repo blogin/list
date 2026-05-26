@@ -1,5 +1,5 @@
 import { Pencil, Trash2 } from 'lucide-react'
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState, useCallback } from 'react'
 import type { Category, ListItem } from '@/domain/types'
 import {
   AlertDialog,
@@ -37,6 +37,11 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { formatItemCost } from '@/lib/format'
+import {
+  DeleteAnimatedBlock,
+  DeleteAnimatedTableRow,
+  makeExpenseItemKey,
+} from '@/features/list/DeleteAnimatedRow'
 import { useKeyboardInset } from '@/hooks/use-keyboard-inset'
 import { cn } from '@/lib/utils'
 
@@ -57,6 +62,7 @@ export function ExpenseList({
 }: ExpenseListProps) {
   const [editIndex, setEditIndex] = useState<number | null>(null)
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null)
+  const [deleting, setDeleting] = useState<{ index: number; key: string } | null>(null)
   const [draft, setDraft] = useState<Partial<ListItem>>({})
   const scrollSnapshotRef = useRef<number | null>(null)
 
@@ -103,13 +109,25 @@ export function ExpenseList({
     />
   )
 
+  const completeDelete = useCallback(() => {
+    setDeleting((current) => {
+      if (!current) return null
+      onDelete(current.index)
+      return null
+    })
+  }, [onDelete])
+
+  function startDelete(index: number) {
+    setDeleting({ index, key: makeExpenseItemKey(items[index] ?? { name: '', cost: '', sel: '' }, index) })
+    setDeleteIndex(null)
+  }
+
   const deleteDialog = (
     <DeleteDialog
       open={deleteIndex !== null}
       onCancel={() => setDeleteIndex(null)}
       onConfirm={() => {
-        if (deleteIndex !== null) onDelete(deleteIndex)
-        setDeleteIndex(null)
+        if (deleteIndex !== null) startDelete(deleteIndex)
       }}
     />
   )
@@ -129,15 +147,21 @@ export function ExpenseList({
   return (
     <>
       <div className="overflow-hidden rounded-lg border bg-card [overflow-anchor:none] md:hidden">
-        {visibleItems.map(({ item, index }, rowIndex) => (
-          <div
-            key={`mobile-${item.name}-${index}`}
-            className={cn(
-              'flex items-center gap-1 px-3 py-2.5',
-              rowIndex > 0 && 'border-t',
-              item.check && 'border-l-[3px] border-l-emerald-500 bg-emerald-50/80',
-            )}
-          >
+        {visibleItems.map(({ item, index }, rowIndex) => {
+          const itemKey = makeExpenseItemKey(item, index)
+          const isExiting = deleting?.key === itemKey
+
+          return (
+            <DeleteAnimatedBlock
+              key={`mobile-${itemKey}`}
+              exiting={isExiting}
+              onExitComplete={completeDelete}
+              className={cn(
+                'flex items-center gap-1 px-3 py-2.5',
+                rowIndex > 0 && 'border-t',
+                item.check && 'border-l-[3px] border-l-emerald-500 bg-emerald-50/80',
+              )}
+            >
             <button
               type="button"
               className="flex min-w-0 flex-1 items-center gap-1.5 text-left"
@@ -177,8 +201,9 @@ export function ExpenseList({
                 <Trash2 className="size-3.5" />
               </Button>
             </div>
-          </div>
-        ))}
+            </DeleteAnimatedBlock>
+          )
+        })}
       </div>
 
       <div className="hidden overflow-hidden rounded-lg border bg-card md:block">
@@ -192,11 +217,17 @@ export function ExpenseList({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {visibleItems.map(({ item, index }) => (
-              <TableRow
-                key={`desktop-${item.name}-${index}`}
-                className={cn(item.check && 'bg-emerald-50/70')}
-              >
+            {visibleItems.map(({ item, index }) => {
+              const itemKey = makeExpenseItemKey(item, index)
+              const isExiting = deleting?.key === itemKey
+
+              return (
+                <DeleteAnimatedTableRow
+                  key={`desktop-${itemKey}`}
+                  exiting={isExiting}
+                  onExitComplete={completeDelete}
+                  className={cn(item.check && 'bg-emerald-50/70')}
+                >
                 <TableCell className="py-2.5">
                   <button
                     type="button"
@@ -237,8 +268,9 @@ export function ExpenseList({
                     </Button>
                   </div>
                 </TableCell>
-              </TableRow>
-            ))}
+                </DeleteAnimatedTableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </div>

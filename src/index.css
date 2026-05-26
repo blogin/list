@@ -149,3 +149,32 @@
     @apply font-sans;
   }
 }
+
+@keyframes expense-row-exit {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  18% {
+    opacity: 1;
+    transform: translate3d(4px, 0, 0) scale(0.995);
+    background-color: oklch(0.96 0.04 17.2);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(-12px, 0, 0) scale(0.94);
+    background-color: oklch(0.98 0.015 17.2);
+  }
+}
+
+.animate-expense-row-exit {
+  animation: expense-row-exit 340ms cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-expense-row-exit {
+    animation: none;
+  }
+}
