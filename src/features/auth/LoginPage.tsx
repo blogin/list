@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { signInWithGoogle } from '@/features/auth/google-sign-in'
+import { getAuthErrorCode } from '@/features/auth/auth-log'
 
 export function LoginPage({ accessDenied = false }: { accessDenied?: boolean }) {
   const [loading, setLoading] = useState(false)
@@ -15,7 +16,10 @@ export function LoginPage({ accessDenied = false }: { accessDenied?: boolean }) 
       if (error instanceof Error && error.message === 'redirect') {
         return
       }
-      toast.error('Не удалось войти через Google')
+      const code = getAuthErrorCode(error)
+      toast.error(
+        code ? `Не удалось войти (${code})` : 'Не удалось войти через Google',
+      )
     } finally {
       setLoading(false)
     }
