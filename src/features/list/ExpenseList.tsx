@@ -1,5 +1,5 @@
 import { Pencil, Trash2 } from 'lucide-react'
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import type { Category, ListItem } from '@/domain/types'
 import {
   AlertDialog,
@@ -57,6 +57,19 @@ export function ExpenseList({
   const [editIndex, setEditIndex] = useState<number | null>(null)
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null)
   const [draft, setDraft] = useState<Partial<ListItem>>({})
+  const scrollSnapshotRef = useRef<number | null>(null)
+
+  useLayoutEffect(() => {
+    if (scrollSnapshotRef.current === null) return
+    const top = scrollSnapshotRef.current
+    scrollSnapshotRef.current = null
+    window.scrollTo({ top, left: window.scrollX })
+  }, [items])
+
+  function handleToggleCheck(index: number) {
+    scrollSnapshotRef.current = window.scrollY
+    onToggleCheck(index)
+  }
 
   const visibleItems = items
     .map((item, index) => ({ item, index }))
@@ -114,7 +127,7 @@ export function ExpenseList({
 
   return (
     <>
-      <div className="overflow-hidden rounded-lg border bg-card md:hidden">
+      <div className="overflow-hidden rounded-lg border bg-card [overflow-anchor:none] md:hidden">
         {visibleItems.map(({ item, index }, rowIndex) => (
           <div
             key={`mobile-${item.name}-${index}`}
@@ -127,7 +140,10 @@ export function ExpenseList({
             <button
               type="button"
               className="flex min-w-0 flex-1 items-center gap-1.5 text-left"
-              onClick={() => onToggleCheck(index)}
+              onClick={(event) => {
+                event.currentTarget.blur()
+                handleToggleCheck(index)
+              }}
             >
               <ItemAmountBadge cost={item.cost} checked={item.check} />
               <span
@@ -181,7 +197,14 @@ export function ExpenseList({
                 className={cn(item.check && 'bg-emerald-50/70')}
               >
                 <TableCell className="py-2.5">
-                  <button type="button" className="text-left" onClick={() => onToggleCheck(index)}>
+                  <button
+                    type="button"
+                    className="text-left"
+                    onClick={(event) => {
+                      event.currentTarget.blur()
+                      handleToggleCheck(index)
+                    }}
+                  >
                     <ItemAmountBadge cost={item.cost} checked={item.check} />
                   </button>
                 </TableCell>
@@ -192,7 +215,10 @@ export function ExpenseList({
                       'w-full text-left text-[15px] leading-snug',
                       item.check && 'text-muted-foreground line-through',
                     )}
-                    onClick={() => onToggleCheck(index)}
+                    onClick={(event) => {
+                      event.currentTarget.blur()
+                      handleToggleCheck(index)
+                    }}
                   >
                     {item.name}
                   </button>
