@@ -7,7 +7,6 @@ import { ExpenseList } from '@/features/list/ExpenseList'
 import { ListPreview } from '@/features/list/ListPreview'
 import { useShoppingApp } from '@/features/list/useShoppingApp'
 import { SalaryPanel } from '@/features/salary/SalaryPanel'
-import { AppHeader } from '@/components/layout/AppHeader'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -18,9 +17,7 @@ export function ShoppingPage() {
   const isMobile = useIsMobile()
 
   return (
-    <div className="min-h-svh bg-background pb-28 md:pb-6">
-      <AppHeader />
-
+    <div className="pb-28 md:pb-6">
       <div className="mx-auto grid max-w-7xl gap-4 p-4 md:grid-cols-[300px_minmax(0,1fr)] md:gap-6 md:p-6">
         <aside className="space-y-3">
           {isMobile ? (

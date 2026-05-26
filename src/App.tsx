@@ -1,6 +1,6 @@
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider'
 import { LoginPage } from '@/features/auth/LoginPage'
-import { ShoppingPage } from '@/features/list/ShoppingPage'
+import { AuthenticatedApp } from '@/features/app/AuthenticatedApp'
 import { Toaster } from '@/components/ui/sonner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -40,7 +40,7 @@ function AppContent() {
     return <LoginPage accessDenied={accessDenied} />
   }
 
-  return <ShoppingPage />
+  return <AuthenticatedApp />
 }
 
 export default function App() {

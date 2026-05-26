@@ -1,32 +1,70 @@
-import { LogOut } from 'lucide-react'
+import { ArrowLeft, Database, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/features/auth/AuthProvider'
+import type { AppView } from '@/features/app/AuthenticatedApp'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 
-export function AppHeader() {
+interface AppHeaderProps {
+  view?: AppView
+  onOpenAdmin?: () => void
+  onBack?: () => void
+}
+
+export function AppHeader({ view = 'shopping', onOpenAdmin, onBack }: AppHeaderProps) {
   const { user, signOut } = useAuth()
   const isMobile = useIsMobile()
+  const title = view === 'admin' ? 'Управление базой' : 'Список покупок'
 
   return (
     <header className="sticky top-0 z-30 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 md:px-6">
-        <div className="min-w-0">
-          <h1 className="truncate text-base font-semibold md:text-lg">Список покупок</h1>
-          {!isMobile && user?.email ? (
-            <p className="truncate text-sm text-muted-foreground">{user.email}</p>
+        <div className="flex min-w-0 items-center gap-1">
+          {view === 'admin' ? (
+            <Button
+              type="button"
+              variant="ghost"
+              className="h-10 shrink-0 px-2 md:px-3"
+              onClick={onBack}
+            >
+              <ArrowLeft className="size-4" />
+              {!isMobile ? <span className="ml-2">К списку</span> : null}
+            </Button>
           ) : null}
+          <div className="min-w-0">
+            <h1 className="truncate text-base font-semibold md:text-lg">{title}</h1>
+            {view === 'shopping' && !isMobile && user?.email ? (
+              <p className="truncate text-sm text-muted-foreground">{user.email}</p>
+            ) : null}
+          </div>
         </div>
-        <Button
-          variant="outline"
-          size={isMobile ? 'icon' : 'default'}
-          className={cn(isMobile ? 'size-10 shrink-0' : 'h-10')}
-          onClick={() => void signOut()}
-          aria-label="Выйти"
-        >
-          <LogOut className="size-4" />
-          {!isMobile ? <span className="ml-2">Выйти</span> : null}
-        </Button>
+
+        <div className="flex shrink-0 items-center gap-2">
+          {view === 'shopping' ? (
+            <Button
+              type="button"
+              variant="outline"
+              size={isMobile ? 'icon' : 'default'}
+              className={cn(isMobile ? 'size-10 shrink-0' : 'h-10')}
+              onClick={onOpenAdmin}
+              aria-label="Управление базой"
+            >
+              <Database className="size-4" />
+              {!isMobile ? <span className="ml-2">База</span> : null}
+            </Button>
+          ) : null}
+
+          <Button
+            variant="outline"
+            size={isMobile ? 'icon' : 'default'}
+            className={cn(isMobile ? 'size-10 shrink-0' : 'h-10')}
+            onClick={() => void signOut()}
+            aria-label="Выйти"
+          >
+            <LogOut className="size-4" />
+            {!isMobile ? <span className="ml-2">Выйти</span> : null}
+          </Button>
+        </div>
       </div>
     </header>
   )
