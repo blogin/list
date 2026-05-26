@@ -44,7 +44,7 @@ function CategoryRows({
             />
             <span className="truncate text-sm">{category.name}</span>
           </span>
-          <Badge variant="category" className="shrink-0 tabular-nums">
+          <Badge variant="category" className="shrink-0 text-sm tabular-nums">
             {formatMoney(category.total ?? 0)}
           </Badge>
         </label>

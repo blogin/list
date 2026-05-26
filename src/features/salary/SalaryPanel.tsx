@@ -129,7 +129,7 @@ function StatRow({
   return (
     <div className={sidebarRowClass}>
       <span className="text-sm text-muted-foreground">{label}</span>
-      <Badge variant={tone} className="tabular-nums">
+      <Badge variant={tone} className="text-sm tabular-nums">
         {value}
       </Badge>
     </div>

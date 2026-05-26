@@ -5,7 +5,7 @@ import { Slot } from "radix-ui"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3",
+  "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-md border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3",
   {
     variants: {
       variant: {
@@ -19,15 +19,15 @@ const badgeVariants = cva(
         ghost: "[a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
         link: "text-primary underline-offset-4 [a&]:hover:underline",
         success:
-          "border-emerald-200 bg-emerald-50 text-emerald-800 [a&]:hover:bg-emerald-100",
+          "border-emerald-200 bg-emerald-50 font-semibold text-emerald-800 tabular-nums shadow-xs [a&]:hover:bg-emerald-100",
         expense:
-          "border-rose-200 bg-rose-50 text-rose-800 [a&]:hover:bg-rose-100",
+          "border-rose-200 bg-rose-50 font-semibold text-rose-800 tabular-nums shadow-xs [a&]:hover:bg-rose-100",
         budget:
-          "border-sky-200 bg-sky-50 text-sky-800 [a&]:hover:bg-sky-100",
+          "border-sky-200 bg-sky-50 font-semibold text-sky-800 tabular-nums shadow-xs [a&]:hover:bg-sky-100",
         category:
-          "border-border bg-muted text-muted-foreground [a&]:hover:bg-muted/80",
+          "border-border bg-muted font-semibold text-muted-foreground tabular-nums shadow-xs [a&]:hover:bg-muted/80",
         amount:
-          "rounded-md border-border bg-secondary font-semibold text-foreground tabular-nums shadow-xs [a&]:hover:bg-secondary/80",
+          "border-border bg-secondary font-semibold text-foreground tabular-nums shadow-xs [a&]:hover:bg-secondary/80",
       },
     },
     defaultVariants: {
