@@ -38,17 +38,18 @@
 
 ## Итерация 0 — Каркас проекта
 
-- [ ] Создать ветку `rewrite/v2` от текущей `new_version`
-- [ ] Scaffold: `Vite + React + TypeScript` в корне; старый Vue → `legacy/`
-- [ ] `npx shadcn@latest init` — style: **new-york**, cssVariables: true, iconLibrary: lucide
-- [ ] Оранжевая тема в `src/index.css`: `--primary`, `--ring`, `--accent`, `--sidebar-primary` в oklch (orange hue ~40–50)
-- [ ] Базовые компоненты: Button, Card, Table, Input, Select, Checkbox, Dialog, Sheet, Sonner, Skeleton, Badge, Separator, AlertDialog, DropdownMenu
-- [ ] Firebase SDK: `firebase/app`, `auth`, `database`; env `.env.local` (`VITE_FIREBASE_*`)
-- [ ] `.env.example` + `.gitignore` для `.env.local`
-- [ ] README: локальный запуск (`npm run dev`, `npm run preview`)
-- [ ] Tailwind breakpoints + mobile-first utilities в layout
-- [ ] `index.html`: viewport meta для mobile
-- [ ] Структура: `src/lib/`, `src/domain/`, `src/features/`, `src/components/ui/`, `src/config/`
+- [x] Создать ветку `rewrite/v2` от текущей `new_version`
+- [x] Scaffold: `Vite + React + TypeScript` в корне; старый Vue → `legacy/`
+- [x] `components.json` вручную — style: **new-york**, cssVariables, lucide (без интерактивного init)
+- [x] Оранжевая тема в `src/index.css`: `--primary`, `--ring`, `--accent`, `--sidebar-primary` в oklch (orange hue ~40–50)
+- [x] Базовые компоненты: Button, Card, Table, Input, Select, Checkbox, Dialog, Sheet, Sonner, Skeleton, Badge, Separator, AlertDialog, DropdownMenu
+- [x] Firebase SDK: `firebase/app`, `auth`, `database`; env `.env.local` (`VITE_FIREBASE_*`)
+- [x] `.env.example` + `.gitignore` для `.env.local`
+- [x] README: локальный запуск (`npm run dev`, `npm run preview`)
+- [x] Tailwind breakpoints + mobile-first utilities в layout
+- [x] `index.html`: viewport meta для mobile
+- [x] Структура: `src/lib/`, `src/domain/`, `src/features/`, `src/components/ui/`, `src/config/`
+- [x] `.cursor/mcp.json` — shadcn MCP
 
 ## Итерация 1 — Доменная логика + тесты
 
