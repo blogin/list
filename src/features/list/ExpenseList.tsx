@@ -119,35 +119,30 @@ export function ExpenseList({
           <div
             key={`mobile-${item.name}-${index}`}
             className={cn(
-              'flex items-start gap-1.5 px-3 py-2.5',
+              'flex items-center gap-1 px-3 py-2.5',
               rowIndex > 0 && 'border-t',
               item.check && 'border-l-[3px] border-l-emerald-500 bg-emerald-50/80',
             )}
           >
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-1.5">
-                <ItemAmountBadge cost={item.cost} checked={item.check} />
-                <Badge variant="category" className="shrink-0">
-                  {item.sel}
-                </Badge>
-              </div>
-              <button
-                type="button"
-                className="mt-1 w-full text-left"
-                onClick={() => onToggleCheck(index)}
+            <button
+              type="button"
+              className="flex min-w-0 flex-1 items-center gap-1.5 text-left"
+              onClick={() => onToggleCheck(index)}
+            >
+              <ItemAmountBadge cost={item.cost} checked={item.check} />
+              <span
+                className={cn(
+                  'min-w-0 flex-1 truncate text-[15px] leading-snug',
+                  item.check && 'text-muted-foreground line-through',
+                )}
               >
-                <p
-                  className={cn(
-                    'leading-snug break-words text-pretty',
-                    mobileNameSizeClass(item.name),
-                    item.check && 'text-muted-foreground line-through',
-                  )}
-                >
-                  {item.name}
-                </p>
-              </button>
-            </div>
-            <div className="flex shrink-0 pt-0.5">
+                {item.name}
+              </span>
+              <Badge variant="category" className="max-w-[4.5rem] shrink-0 truncate">
+                {item.sel}
+              </Badge>
+            </button>
+            <div className="flex shrink-0">
               <Button
                 size="icon-sm"
                 variant="ghost"
@@ -232,12 +227,6 @@ function ItemAmountBadge({ cost, checked }: { cost: string; checked: boolean }) 
       {formatItemCost(cost)}
     </Badge>
   )
-}
-
-function mobileNameSizeClass(name: string): string {
-  if (name.length > 40) return 'text-[13px]'
-  if (name.length > 22) return 'text-[14px]'
-  return 'text-[15px]'
 }
 
 function EditSheet({
