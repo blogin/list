@@ -28,9 +28,10 @@ function AppContent() {
   if (loading) {
     return (
       <div className="flex min-h-svh items-center justify-center p-6">
-        <div className="w-full max-w-md space-y-3">
-          <Skeleton className="h-8 w-48" />
+        <div className="w-full max-w-md space-y-3 text-center">
+          <Skeleton className="mx-auto h-8 w-48" />
           <Skeleton className="h-32 w-full" />
+          <p className="text-sm text-muted-foreground">Загрузка…</p>
         </div>
       </div>
     )

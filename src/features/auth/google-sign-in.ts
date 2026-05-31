@@ -5,6 +5,7 @@ import {
   signInWithRedirect,
   signOut,
   type User,
+  type UserCredential,
 } from 'firebase/auth'
 import {
   canUseSessionStorage,
@@ -15,6 +16,31 @@ import {
 import { getFirebaseAuth } from '@/lib/firebase/client'
 
 const provider = new GoogleAuthProvider()
+
+/** React StrictMode в dev вызывает effect дважды — getRedirectResult только один раз. */
+let pendingRedirectResult: Promise<UserCredential | null> | undefined
+
+async function resolveRedirectResult(): Promise<UserCredential | null> {
+  if (!canUseSessionStorage()) {
+    return null
+  }
+
+  const auth = getFirebaseAuth()
+
+  try {
+    return await getRedirectResult(auth)
+  } catch (error) {
+    if (isMissingRedirectStateError(error)) {
+      return null
+    }
+
+    if (auth.currentUser) {
+      return null
+    }
+
+    throw error
+  }
+}
 
 export async function signInWithGoogle(): Promise<User> {
   const auth = getFirebaseAuth()
@@ -35,21 +61,23 @@ export async function signInWithGoogle(): Promise<User> {
 }
 
 export async function completeGoogleRedirectSignIn(): Promise<User | null> {
-  if (!canUseSessionStorage()) {
-    return null
+  if (!pendingRedirectResult) {
+    pendingRedirectResult = resolveRedirectResult()
   }
 
-  try {
-    const result = await getRedirectResult(getFirebaseAuth())
-    return result?.user ?? null
-  } catch (error) {
-    if (isMissingRedirectStateError(error)) {
-      return null
-    }
-    throw error
+  const result = await pendingRedirectResult
+  if (result?.user) {
+    return result.user
   }
+
+  return getFirebaseAuth().currentUser
 }
 
 export async function signOutUser(): Promise<void> {
   await signOut(getFirebaseAuth())
+}
+
+/** @internal */
+export function resetRedirectResultCacheForTests(): void {
+  pendingRedirectResult = undefined
 }

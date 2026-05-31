@@ -72,6 +72,21 @@ npm run dev
 
 При смене списка — обновить `.env.local` и задеплоить rules.
 
+### Локально без Google (опционально)
+
+Только для `npm run dev` (в prod-сборке **не работает**):
+
+1. Firebase Console → **Authentication → Sign-in method → Email/Password** — включить.
+2. **Users → Add user** — email из `VITE_ALLOWED_EMAILS` и пароль для dev.
+3. В `.env.local`:
+   ```
+   VITE_DEV_AUTO_LOGIN=true
+   VITE_DEV_AUTH_EMAIL=alogin2009@gmail.com
+   VITE_DEV_AUTH_PASSWORD=your-dev-password
+   ```
+
+Приложение войдёт автоматически, RTDB использует тот же prod-проект с настоящим токеном.
+
 ---
 
 ## Локальная разработка

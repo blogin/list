@@ -9,6 +9,8 @@ import {
 import { onAuthStateChanged, type User } from 'firebase/auth'
 import { toast } from 'sonner'
 import { isEmailAllowed } from '@/config/allowed-emails'
+import { isDevAutoLoginEnabled } from '@/config/dev-auth'
+import { signInDevUser } from '@/features/auth/dev-auto-login'
 import { completeGoogleRedirectSignIn, signOutUser } from '@/features/auth/google-sign-in'
 import { getAuthErrorCode, isMissingRedirectStateError } from '@/features/auth/auth-utils'
 import { getFirebaseAuth } from '@/lib/firebase/client'
@@ -17,6 +19,7 @@ interface AuthContextValue {
   user: User | null
   loading: boolean
   accessDenied: boolean
+  devAutoLogin: boolean
   signOut: () => Promise<void>
 }
 
@@ -46,11 +49,11 @@ async function enforceAllowedEmail(user: User | null): Promise<{
   }
 
   await signOutUser()
-  toast.error('Нет доступа. Разрешены только указанные Google-аккаунты.')
   return { user: null, accessDenied: true }
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const devAutoLogin = isDevAutoLoginEnabled()
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [accessDenied, setAccessDenied] = useState(false)
@@ -60,10 +63,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const auth = getFirebaseAuth()
 
     async function initAuth() {
+      if (devAutoLogin) {
+        try {
+          const devUser = await signInDevUser()
+          const result = await enforceAllowedEmail(devUser)
+          if (!active) return
+          setUser(result.user)
+          setAccessDenied(result.accessDenied)
+          setLoading(false)
+          return
+        } catch {
+          if (!active) return
+          toast.error(
+            'Dev-вход не удался. Проверь VITE_DEV_AUTH_EMAIL/PASSWORD и Email/Password в Firebase.',
+          )
+          setLoading(false)
+          return
+        }
+      }
+
       try {
         await completeGoogleRedirectSignIn()
       } catch (error) {
-        if (!isMissingRedirectStateError(error)) {
+        if (!isMissingRedirectStateError(error) && !auth.currentUser) {
           const code = getAuthErrorCode(error)
           toast.error(
             code
@@ -96,16 +118,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       active = false
       unsubscribe?.()
     }
-  }, [])
+  }, [devAutoLogin])
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
       loading,
       accessDenied,
+      devAutoLogin,
       signOut: signOutUser,
     }),
-    [user, loading, accessDenied],
+    [user, loading, accessDenied, devAutoLogin],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
