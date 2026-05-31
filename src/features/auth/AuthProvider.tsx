@@ -12,7 +12,7 @@ import { isEmailAllowed } from '@/config/allowed-emails'
 import { isDevAutoLoginEnabled } from '@/config/dev-auth'
 import { signInDevUser } from '@/features/auth/dev-auto-login'
 import { completeGoogleRedirectSignIn, signOutUser } from '@/features/auth/google-sign-in'
-import { getAuthErrorCode, isMissingRedirectStateError } from '@/features/auth/auth-utils'
+import { getAuthErrorCode, isMissingRedirectStateError, getAuthErrorMessage } from '@/features/auth/auth-utils'
 import { getFirebaseAuth } from '@/lib/firebase/client'
 
 interface AuthContextValue {
@@ -87,9 +87,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } catch (error) {
         if (!isMissingRedirectStateError(error) && !auth.currentUser) {
           const code = getAuthErrorCode(error)
+          const detail = getAuthErrorMessage(error)
           toast.error(
             code
-              ? `Не удалось завершить вход (${code})`
+              ? detail && detail !== code
+                ? `Не удалось завершить вход (${code}): ${detail}`
+                : `Не удалось завершить вход (${code})`
               : 'Не удалось завершить вход через Google',
           )
         }

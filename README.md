@@ -133,11 +133,13 @@ npm run preview      # http://localhost:4173 — проверить dist/
 Первый раз — авторизация в Firebase CLI и привязка проекта:
 
 ```bash
-npx firebase-tools login
+npm exec firebase-tools -- login
 cp .firebaserc.example .firebaserc
 # указать свой project id в .firebaserc
-npx firebase-tools use --add
+npm exec firebase-tools -- use --add
 ```
+
+> **PowerShell:** если `npx` падает с `PSSecurityException`, используй `npm exec firebase-tools -- …` или `npx.cmd firebase-tools login`.
 
 Деплой hosting + rules:
 
@@ -156,6 +158,7 @@ npm run deploy:hosting
 ```bash
 npm run build
 npx firebase-tools deploy --only hosting,database
+# или: npm exec firebase-tools -- deploy --only hosting,database
 ```
 
 ### После деплоя

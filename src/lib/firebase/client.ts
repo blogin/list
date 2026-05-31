@@ -1,5 +1,11 @@
 import { type FirebaseApp, initializeApp } from 'firebase/app'
-import { type Auth, getAuth } from 'firebase/auth'
+import {
+  type Auth,
+  browserLocalPersistence,
+  browserPopupRedirectResolver,
+  getAuth,
+  initializeAuth,
+} from 'firebase/auth'
 import { type Database, getDatabase } from 'firebase/database'
 
 function readEnv(key: string): string {
@@ -31,7 +37,14 @@ function getFirebaseApp(): FirebaseApp {
 
 export function getFirebaseAuth(): Auth {
   if (!authInstance) {
-    authInstance = getAuth(getFirebaseApp())
+    try {
+      authInstance = initializeAuth(getFirebaseApp(), {
+        persistence: browserLocalPersistence,
+        popupRedirectResolver: browserPopupRedirectResolver,
+      })
+    } catch {
+      authInstance = getAuth(getFirebaseApp())
+    }
   }
   return authInstance
 }

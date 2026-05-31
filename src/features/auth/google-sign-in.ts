@@ -42,8 +42,24 @@ async function resolveRedirectResult(): Promise<UserCredential | null> {
   }
 }
 
+/** @internal */
+export function clearRedirectResultPromise(): void {
+  pendingRedirectResult = undefined
+}
+
+async function signInWithGoogleRedirect(auth: ReturnType<typeof getFirebaseAuth>): Promise<never> {
+  clearRedirectResultPromise()
+  await signInWithRedirect(auth, provider)
+  throw new Error('redirect')
+}
+
 export async function signInWithGoogle(): Promise<User> {
   const auth = getFirebaseAuth()
+
+  // На hosting popup часто падает с internal-error; redirect надёжнее.
+  if (import.meta.env.PROD && canUseSessionStorage()) {
+    return signInWithGoogleRedirect(auth)
+  }
 
   try {
     const result = await signInWithPopup(auth, provider)
@@ -52,8 +68,7 @@ export async function signInWithGoogle(): Promise<User> {
     const code = getAuthErrorCode(error)
 
     if (shouldFallbackToRedirect(code) && canUseSessionStorage()) {
-      await signInWithRedirect(auth, provider)
-      throw new Error('redirect')
+      return signInWithGoogleRedirect(auth)
     }
 
     throw error
@@ -79,5 +94,5 @@ export async function signOutUser(): Promise<void> {
 
 /** @internal */
 export function resetRedirectResultCacheForTests(): void {
-  pendingRedirectResult = undefined
+  clearRedirectResultPromise()
 }

@@ -25,9 +25,10 @@ export function LoginPage({ accessDenied = false }: { accessDenied?: boolean }) 
             : `Не удалось войти (${code})`
           : 'Не удалось войти через Google',
       )
-    } finally {
       setLoading(false)
+      return
     }
+    setLoading(false)
   }
 
   return (
