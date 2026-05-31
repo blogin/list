@@ -67,20 +67,26 @@ npm run dev
 
 ### Google Sign-In на `*.web.app` (обязательно для prod)
 
-Если приложение открывают на `https://your-project.web.app`, **`VITE_FIREBASE_AUTH_DOMAIN` должен быть `your-project.web.app`**, не `firebaseapp.com`. Иначе `signInWithRedirect` / popup падают с `auth/internal-error` в Chrome, Firefox, Safari ([документация Firebase](https://firebase.google.com/docs/auth/web/redirect-best-practices)).
+Приложение на `https://your-project.web.app` требует **Option 1** из [документации Firebase](https://firebase.google.com/docs/auth/web/redirect-best-practices). Без настройки OAuth в Google Cloud — `redirect_uri_mismatch` или `auth/internal-error`.
 
-1. В `.env.local` перед деплоем:
-   ```
-   VITE_FIREBASE_AUTH_DOMAIN=your-project.web.app
-   ```
-2. **Google Cloud Console** → проект → **APIs & Services → Credentials** → OAuth 2.0 Client ID (Web client) → **Authorized redirect URIs** — добавить:
-   ```
-   https://your-project.web.app/__/auth/handler
-   ```
-3. **Authentication → Settings → Authorized domains** — `your-project.web.app` (обычно уже есть).
-4. `npm run deploy` — пересборка с новым `authDomain`.
+**Google Cloud Console** → проект → **APIs & Services → Credentials** → OAuth 2.0 Client ID (Web client, создаёт Firebase):
 
-Альтернатива без смены `authDomain`: открывать приложение только на `https://your-project.firebaseapp.com`.
+| Поле | Добавить |
+|------|----------|
+| **Authorized JavaScript origins** | `https://your-project.web.app` |
+| **Authorized redirect URIs** | `https://your-project.web.app/__/auth/handler` |
+
+Для `firebaseapp.com` обычно уже есть `https://your-project.firebaseapp.com/__/auth/handler` — не удалять.
+
+1. В `.env.local`: `VITE_FIREBASE_AUTH_DOMAIN=your-project.web.app` (приложение также подставляет домен из URL автоматически).
+2. **Authentication → Settings → Authorized domains** — `your-project.web.app`.
+3. `npm run deploy`.
+
+**Вход:** popup с выбором аккаунта (по умолчанию). Redirect — только если popup заблокирован браузером.
+
+Альтернатива: открывать `https://your-project.firebaseapp.com` — OAuth для этого домена обычно уже настроен.
+
+Проверить значения для своего проекта: `npm run oauth:checklist`
 
 ### Whitelist email
 

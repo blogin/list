@@ -11,6 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "rules:generate": "node scripts/generate-database-rules.mjs",
+    "oauth:checklist": "node scripts/print-oauth-checklist.mjs",
     "deploy": "npm run build && npm run rules:generate && npm exec firebase-tools -- deploy --only hosting,database",
     "deploy:hosting": "npm run build && npm exec firebase-tools -- deploy --only hosting",
     "firebase": "npm exec firebase-tools --"

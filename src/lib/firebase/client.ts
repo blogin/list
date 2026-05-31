@@ -2,7 +2,6 @@ import { type FirebaseApp, initializeApp } from 'firebase/app'
 import {
   type Auth,
   browserLocalPersistence,
-  browserPopupRedirectResolver,
   getAuth,
   initializeAuth,
 } from 'firebase/auth'
@@ -20,11 +19,25 @@ let app: FirebaseApp | undefined
 let authInstance: Auth | undefined
 let databaseInstance: Database | undefined
 
+/** authDomain = текущий домен hosting (web.app / firebaseapp.com), иначе из env. */
+export function resolveAuthDomain(): string {
+  const fromEnv = readEnv('VITE_FIREBASE_AUTH_DOMAIN')
+  if (typeof window === 'undefined') return fromEnv
+
+  const { hostname } = window.location
+  const projectId = readEnv('VITE_FIREBASE_PROJECT_ID')
+  if (hostname === `${projectId}.web.app` || hostname === `${projectId}.firebaseapp.com`) {
+    return hostname
+  }
+
+  return fromEnv
+}
+
 function getFirebaseApp(): FirebaseApp {
   if (!app) {
     app = initializeApp({
       apiKey: readEnv('VITE_FIREBASE_API_KEY'),
-      authDomain: readEnv('VITE_FIREBASE_AUTH_DOMAIN'),
+      authDomain: resolveAuthDomain(),
       databaseURL: readEnv('VITE_FIREBASE_DATABASE_URL'),
       projectId: readEnv('VITE_FIREBASE_PROJECT_ID'),
       storageBucket: readEnv('VITE_FIREBASE_STORAGE_BUCKET'),
@@ -36,7 +49,7 @@ function getFirebaseApp(): FirebaseApp {
 }
 
 export function getFirebaseAuthDomain(): string {
-  return readEnv('VITE_FIREBASE_AUTH_DOMAIN')
+  return resolveAuthDomain()
 }
 
 export function getFirebaseAuth(): Auth {
@@ -44,7 +57,6 @@ export function getFirebaseAuth(): Auth {
     try {
       authInstance = initializeAuth(getFirebaseApp(), {
         persistence: browserLocalPersistence,
-        popupRedirectResolver: browserPopupRedirectResolver,
       })
     } catch {
       authInstance = getAuth(getFirebaseApp())

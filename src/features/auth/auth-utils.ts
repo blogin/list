@@ -10,13 +10,11 @@ export function isMissingRedirectStateError(error: unknown): boolean {
   return text.includes('missing initial state')
 }
 
+/** Redirect только когда popup объективно недоступен, не при internal-error. */
 export function shouldFallbackToRedirect(code: string | undefined): boolean {
   return (
     code === 'auth/popup-blocked' ||
-    code === 'auth/operation-not-supported-in-this-environment' ||
-    code === 'auth/internal-error' ||
-    code === 'auth/cancelled-popup-request' ||
-    code === 'auth/popup-closed-by-user'
+    code === 'auth/operation-not-supported-in-this-environment'
   )
 }
 

@@ -1,5 +1,6 @@
 import {
   GoogleAuthProvider,
+  browserPopupRedirectResolver,
   getRedirectResult,
   signInWithPopup,
   signInWithRedirect,
@@ -49,7 +50,7 @@ export function clearRedirectResultPromise(): void {
 
 async function signInWithGoogleRedirect(auth: ReturnType<typeof getFirebaseAuth>): Promise<never> {
   clearRedirectResultPromise()
-  await signInWithRedirect(auth, provider)
+  await signInWithRedirect(auth, provider, browserPopupRedirectResolver)
   throw new Error('redirect')
 }
 
@@ -57,7 +58,7 @@ export async function signInWithGoogle(): Promise<User> {
   const auth = getFirebaseAuth()
 
   try {
-    const result = await signInWithPopup(auth, provider)
+    const result = await signInWithPopup(auth, provider, browserPopupRedirectResolver)
     return result.user
   } catch (error) {
     const code = getAuthErrorCode(error)
