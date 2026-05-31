@@ -14,6 +14,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { useAdminSalaryQuery, useSaveSalaryMutation } from '@/features/admin/hooks'
+import { formatIntegerWithSpaces, parseDigitsOnly } from '@/lib/format'
 
 const MONTH_NAMES = [
   'January',
@@ -97,20 +98,24 @@ export function SalaryAdminPanel() {
                   <TableCell className="font-medium">{row.name}</TableCell>
                   <TableCell>
                     <Input
-                      inputMode="decimal"
-                      value={row.salary}
+                      inputMode="numeric"
+                      value={formatIntegerWithSpaces(row.salary)}
                       onChange={(event) =>
-                        updateRow(index, { salary: Number(event.target.value) || 0 })
+                        updateRow(index, {
+                          salary: Number.parseInt(parseDigitsOnly(event.target.value), 10) || 0,
+                        })
                       }
                       className="h-10 max-w-36"
                     />
                   </TableCell>
                   <TableCell>
                     <Input
-                      inputMode="decimal"
-                      value={row.backfire}
+                      inputMode="numeric"
+                      value={formatIntegerWithSpaces(row.backfire)}
                       onChange={(event) =>
-                        updateRow(index, { backfire: Number(event.target.value) || 0 })
+                        updateRow(index, {
+                          backfire: Number.parseInt(parseDigitsOnly(event.target.value), 10) || 0,
+                        })
                       }
                       className="h-10 max-w-36"
                     />
