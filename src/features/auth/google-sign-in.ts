@@ -56,11 +56,6 @@ async function signInWithGoogleRedirect(auth: ReturnType<typeof getFirebaseAuth>
 export async function signInWithGoogle(): Promise<User> {
   const auth = getFirebaseAuth()
 
-  // На hosting popup часто падает с internal-error; redirect надёжнее.
-  if (import.meta.env.PROD && canUseSessionStorage()) {
-    return signInWithGoogleRedirect(auth)
-  }
-
   try {
     const result = await signInWithPopup(auth, provider)
     return result.user

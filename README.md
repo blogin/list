@@ -46,7 +46,7 @@ npm run dev
 | Переменная | Пример |
 |------------|--------|
 | `VITE_FIREBASE_API_KEY` | `AIza...` |
-| `VITE_FIREBASE_AUTH_DOMAIN` | `your-project.firebaseapp.com` |
+| `VITE_FIREBASE_AUTH_DOMAIN` | `your-project.web.app` (prod на Hosting `*.web.app`) |
 | `VITE_FIREBASE_DATABASE_URL` | `https://your-project.firebaseio.com` |
 | `VITE_FIREBASE_PROJECT_ID` | `your-project-id` |
 | `VITE_FIREBASE_STORAGE_BUCKET` | `your-project.appspot.com` |
@@ -64,6 +64,23 @@ npm run dev
    - `localhost`
    - домен hosting после деплоя (`*.web.app`, `*.firebaseapp.com`)
 3. **Realtime Database** — шаблон rules: `database.rules.json.example`; локальный `database.rules.json` генерируется из `.env.local`.
+
+### Google Sign-In на `*.web.app` (обязательно для prod)
+
+Если приложение открывают на `https://your-project.web.app`, **`VITE_FIREBASE_AUTH_DOMAIN` должен быть `your-project.web.app`**, не `firebaseapp.com`. Иначе `signInWithRedirect` / popup падают с `auth/internal-error` в Chrome, Firefox, Safari ([документация Firebase](https://firebase.google.com/docs/auth/web/redirect-best-practices)).
+
+1. В `.env.local` перед деплоем:
+   ```
+   VITE_FIREBASE_AUTH_DOMAIN=your-project.web.app
+   ```
+2. **Google Cloud Console** → проект → **APIs & Services → Credentials** → OAuth 2.0 Client ID (Web client) → **Authorized redirect URIs** — добавить:
+   ```
+   https://your-project.web.app/__/auth/handler
+   ```
+3. **Authentication → Settings → Authorized domains** — `your-project.web.app` (обычно уже есть).
+4. `npm run deploy` — пересборка с новым `authDomain`.
+
+Альтернатива без смены `authDomain`: открывать приложение только на `https://your-project.firebaseapp.com`.
 
 ### Whitelist email
 

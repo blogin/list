@@ -35,6 +35,10 @@ function getFirebaseApp(): FirebaseApp {
   return app
 }
 
+export function getFirebaseAuthDomain(): string {
+  return readEnv('VITE_FIREBASE_AUTH_DOMAIN')
+}
+
 export function getFirebaseAuth(): Auth {
   if (!authInstance) {
     try {
