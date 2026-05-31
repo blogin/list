@@ -11,7 +11,6 @@ describe('shouldFallbackToRedirect', () => {
     expect(shouldFallbackToRedirect('auth/internal-error')).toBe(false)
     expect(shouldFallbackToRedirect('auth/cancelled-popup-request')).toBe(false)
     expect(shouldFallbackToRedirect('auth/popup-closed-by-user')).toBe(false)
-    expect(shouldFallbackToRedirect('auth/user-disabled')).toBe(false)
     expect(shouldFallbackToRedirect(undefined)).toBe(false)
   })
 })

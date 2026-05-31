@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { signInWithGoogle } from '@/features/auth/google-sign-in'
-import { getAuthErrorCode, getAuthErrorMessage } from '@/features/auth/auth-utils'
+import { getAuthErrorCode } from '@/features/auth/auth-utils'
 
 export function LoginPage({ accessDenied = false }: { accessDenied?: boolean }) {
   const [loading, setLoading] = useState(false)
@@ -17,18 +17,12 @@ export function LoginPage({ accessDenied = false }: { accessDenied?: boolean }) 
         return
       }
       const code = getAuthErrorCode(error)
-      const detail = getAuthErrorMessage(error)
       toast.error(
-        code
-          ? detail && detail !== code
-            ? `Не удалось войти (${code}): ${detail}`
-            : `Не удалось войти (${code})`
-          : 'Не удалось войти через Google',
+        code ? `Не удалось войти (${code})` : 'Не удалось войти через Google',
       )
+    } finally {
       setLoading(false)
-      return
     }
-    setLoading(false)
   }
 
   return (
@@ -38,10 +32,8 @@ export function LoginPage({ accessDenied = false }: { accessDenied?: boolean }) 
           <CardTitle>Список покупок</CardTitle>
           <CardDescription>
             {accessDenied
-              ? 'Нет доступа. Разрешены только указанные аккаунты.'
-              : loading
-                ? 'Вход…'
-                : 'Войдите через Google, чтобы открыть список и бюджет.'}
+              ? 'У вашего Google-аккаунта нет доступа к этому приложению.'
+              : 'Войдите через Google, чтобы открыть список и бюджет.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -50,7 +42,7 @@ export function LoginPage({ accessDenied = false }: { accessDenied?: boolean }) 
             disabled={loading}
             onClick={() => void handleSignIn()}
           >
-            {loading ? 'Вход…' : 'Войти через Google'}
+            {loading ? 'Вход...' : 'Войти через Google'}
           </Button>
         </CardContent>
       </Card>

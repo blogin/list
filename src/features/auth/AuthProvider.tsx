@@ -12,8 +12,8 @@ import { isEmailAllowed } from '@/config/allowed-emails'
 import { isDevAutoLoginEnabled } from '@/config/dev-auth'
 import { signInDevUser } from '@/features/auth/dev-auto-login'
 import { completeGoogleRedirectSignIn, signOutUser } from '@/features/auth/google-sign-in'
-import { getAuthErrorCode, isMissingRedirectStateError, getAuthErrorMessage } from '@/features/auth/auth-utils'
-import { getFirebaseAuth, getFirebaseAuthDomain } from '@/lib/firebase/client'
+import { getAuthErrorCode, isMissingRedirectStateError } from '@/features/auth/auth-utils'
+import { getFirebaseAuth } from '@/lib/firebase/client'
 
 interface AuthContextValue {
   user: User | null
@@ -52,19 +52,6 @@ async function enforceAllowedEmail(user: User | null): Promise<{
   return { user: null, accessDenied: true }
 }
 
-function warnIfAuthDomainMismatch(): void {
-  if (import.meta.env.DEV) return
-
-  const authDomain = getFirebaseAuthDomain()
-  const { hostname } = window.location
-  if (!authDomain || authDomain === hostname) return
-
-  console.warn(
-    `[auth] authDomain (${authDomain}) не совпадает с ${hostname}. ` +
-      'Google Sign-In может не работать. См. README → Google Sign-In на *.web.app.',
-  )
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const devAutoLogin = isDevAutoLoginEnabled()
   const [user, setUser] = useState<User | null>(null)
@@ -76,8 +63,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const auth = getFirebaseAuth()
 
     async function initAuth() {
-      warnIfAuthDomainMismatch()
-
       if (devAutoLogin) {
         try {
           const devUser = await signInDevUser()
@@ -100,14 +85,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         await completeGoogleRedirectSignIn()
       } catch (error) {
-        if (!isMissingRedirectStateError(error) && !auth.currentUser) {
+        if (!isMissingRedirectStateError(error)) {
           const code = getAuthErrorCode(error)
-          const detail = getAuthErrorMessage(error)
           toast.error(
             code
-              ? detail && detail !== code
-                ? `Не удалось завершить вход (${code}): ${detail}`
-                : `Не удалось завершить вход (${code})`
+              ? `Не удалось завершить вход (${code})`
               : 'Не удалось завершить вход через Google',
           )
         }
